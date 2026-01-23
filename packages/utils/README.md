@@ -4,7 +4,22 @@ Shared utility functions for the monorepo. This package provides commonly-used h
 
 ## Installation
 
-This package is internal to the monorepo. Add it to your app's dependencies:
+### From npm (after publishing)
+
+```bash
+# npm
+npm install @repo/utils
+
+# pnpm
+pnpm add @repo/utils
+
+# yarn
+yarn add @repo/utils
+```
+
+### Within the monorepo
+
+If you're using this package within the monorepo, add it to your app's `package.json`:
 
 ```json
 {
@@ -12,6 +27,12 @@ This package is internal to the monorepo. Add it to your app's dependencies:
     "@repo/utils": "workspace:*"
   }
 }
+```
+
+Then run:
+
+```bash
+pnpm install
 ```
 
 ## Usage

@@ -4,7 +4,22 @@ Shared validation functions for the monorepo. This package provides type-safe va
 
 ## Installation
 
-This package is internal to the monorepo. Add it to your app's dependencies:
+### From npm (after publishing)
+
+```bash
+# npm
+npm install @repo/validators
+
+# pnpm
+pnpm add @repo/validators
+
+# yarn
+yarn add @repo/validators
+```
+
+### Within the monorepo
+
+If you're using this package within the monorepo, add it to your app's `package.json`:
 
 ```json
 {
@@ -12,6 +27,12 @@ This package is internal to the monorepo. Add it to your app's dependencies:
     "@repo/validators": "workspace:*"
   }
 }
+```
+
+Then run:
+
+```bash
+pnpm install
 ```
 
 ## Usage

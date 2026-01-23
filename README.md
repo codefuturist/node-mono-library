@@ -32,6 +32,69 @@ This Turborepo includes the following packages/apps:
 
 Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 
+## Using the Libraries
+
+The `@repo/utils` and `@repo/validators` packages are publishable libraries that can be used in external projects.
+
+### Installation (from npm)
+
+After the packages are published to npm:
+
+```bash
+# Install @repo/utils
+npm install @repo/utils
+# or
+pnpm add @repo/utils
+
+# Install @repo/validators
+npm install @repo/validators
+# or
+pnpm add @repo/validators
+```
+
+### Quick Usage Examples
+
+**@repo/utils** - Utility functions:
+
+```typescript
+// Import specific modules
+import { capitalize, truncate } from "@repo/utils/string";
+import { unique, chunk } from "@repo/utils/array";
+import { deepClone, pick } from "@repo/utils/object";
+import { delay, retry } from "@repo/utils/async";
+
+// Or import everything
+import * as utils from "@repo/utils";
+
+capitalize("hello");       // "Hello"
+unique([1, 2, 2, 3]);     // [1, 2, 3]
+deepClone({ a: 1 });      // { a: 1 } (deep copy)
+await delay(1000);        // Wait 1 second
+```
+
+**@repo/validators** - Validation functions:
+
+```typescript
+// Import specific modules
+import { isEmpty, hasMinLength } from "@repo/validators/string";
+import { isNumber, isInRange } from "@repo/validators/number";
+import { isPlainObject, hasKeys } from "@repo/validators/object";
+import { isValidDate, isPast } from "@repo/validators/date";
+import { isEmail, isUrl } from "@repo/validators/format";
+
+// Or import everything
+import * as validators from "@repo/validators";
+
+isEmpty("");              // true
+isInRange(5, 1, 10);     // true
+isEmail("a@b.com");      // true
+isValidDate(new Date()); // true
+```
+
+For full API documentation, see:
+- [@repo/utils README](packages/utils/README.md)
+- [@repo/validators README](packages/validators/README.md)
+
 ### Utilities
 
 This Turborepo has some additional tools already setup for you:
