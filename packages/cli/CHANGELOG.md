@@ -1,5 +1,16 @@
 # @repo/cli
 
+## 0.3.0
+
+### Minor Changes
+
+- Improved binary distribution with pkg-compatible utilities
+  - Replace consola with custom picocolors-based logger (fixes segfaults in pkg binaries)
+  - Replace ora with custom spinner implementation (pkg compatible)
+  - Add codesigning for macOS binaries
+  - Update build process to use --no-bytecode flag for better compatibility
+  - Dynamic import for update-notifier to avoid bundling issues
+
 ## 0.2.0
 
 ### Minor Changes
