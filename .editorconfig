@@ -1,6 +1,5 @@
-# EditorConfig - https://editorconfig.org
-# Ensures consistent coding styles across different editors and IDEs
-
+# Synced from vercel/turborepo
+# http://editorconfig.org
 root = true
 
 [*]
@@ -19,11 +18,19 @@ max_line_length = off
 [*.{yml,yaml}]
 indent_size = 2
 
+[*.t]
+trim_trailing_whitespace = false
+
 [Makefile]
 indent_style = tab
 
-[*.go]
+[{go.mod,go.sum,*.go}]
 indent_style = tab
+
+[*.rs]
+# Keep in sync with rustfmt
+max_line_length = 100
+indent_size = 4
 
 [*.{sh,bash}]
 indent_size = 2

@@ -15,7 +15,7 @@
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*", "!README.md", "!**/*.test.ts"],
-      "outputs": [".next/**", "!.next/cache/**", "dist/**"],
+      "outputs": ["dist/**"],
       "env": ["VERCEL_URL", "NEXT_PUBLIC_*"],
       "outputLogs": "new-only"
     },
@@ -44,7 +44,7 @@
       "cache": true
     },
     "test": {
-      "dependsOn": ["transit", "@repo/vitest-config#build"],
+      "dependsOn": ["transit", "@repo/vitest-config#build", "@repo/tsup-config#build"],
       "inputs": [
         "$TURBO_DEFAULT$",
         "**/__tests__/**",
@@ -68,7 +68,7 @@
       "outputLogs": "full"
     },
     "test:coverage": {
-      "dependsOn": ["transit", "@repo/vitest-config#build"],
+      "dependsOn": ["transit", "@repo/vitest-config#build", "@repo/tsup-config#build"],
       "inputs": [
         "$TURBO_DEFAULT$",
         "**/__tests__/**",

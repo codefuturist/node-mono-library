@@ -25,9 +25,10 @@
     "dev": "tsup --watch",
     "test": "vitest run",
     "test:watch": "vitest",
-    "lint": "eslint .",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint . --max-warnings 0",
     "check-types": "tsc --noEmit",
-    "clean": "rm -rf dist node_modules .turbo"
+    "clean": "rm -rf dist coverage .turbo"
     {{else}}
     "check-types": "tsc --noEmit",
     "clean": "rm -rf node_modules .turbo"
@@ -37,14 +38,19 @@
   "devDependencies": {
     {{#if (eq type "library")}}
     "@repo/eslint-config": "workspace:*",
+    "@repo/tsup-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@repo/vitest-config": "workspace:*",
-    "tsup": "^8.5.0",
-    "typescript": "^5.9.3",
-    "vitest": "^3.1.4"
+    "@vitest/coverage-v8": "catalog:",
+    "eslint": "catalog:",
+    "eslint-config-prettier": "catalog:",
+    "prettier": "catalog:",
+    "tsup": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
     {{else}}
     "@repo/typescript-config": "workspace:*",
-    "typescript": "^5.9.3"
+    "typescript": "catalog:"
     {{/if}}
   }
 }

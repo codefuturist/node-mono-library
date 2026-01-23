@@ -1,10 +1,3 @@
-import { defineConfig } from "vitest/config";
-import { sharedConfig } from "@repo/vitest-config";
+import { createConfig } from "@repo/vitest-config";
 
-export default defineConfig({
-  ...sharedConfig,
-  test: {
-    ...sharedConfig.test,
-    include: ["__tests__/**/*.test.ts"],
-  },
-});
+export default createConfig();

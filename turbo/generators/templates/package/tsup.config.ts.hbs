@@ -1,12 +1,3 @@
-import { defineConfig } from "tsup";
+import { libraryConfig } from "@repo/tsup-config";
 
-export default defineConfig({
-  entry: ["src/index.ts"],
-  format: ["esm", "cjs"],
-  dts: true,
-  splitting: false,
-  sourcemap: true,
-  clean: true,
-  treeshake: true,
-  minify: false,
-});
+export default libraryConfig(["src/index.ts"]);

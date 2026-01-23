@@ -1,0 +1,60 @@
+# Copybara configuration for syncing config files from Turborepo
+# https://github.com/google/copybara
+#
+# Usage:
+#   java -jar /path/to/copybara.jar copy.bara.sky sync_editorconfig --folder-dir=.
+#
+# Or via script:
+#   ./scripts/sync-upstream.sh
+
+# Sync .editorconfig from Turborepo with local customizations preserved
+core.workflow(
+    name = "sync_editorconfig",
+    origin = git.github_origin(
+        url = "https://github.com/vercel/turborepo",
+        ref = "main",
+    ),
+    destination = folder.destination(),
+    origin_files = glob(include = [".editorconfig"]),
+    destination_files = glob(include = [".editorconfig"]),
+    authoring = authoring.overwrite("Copybara <noreply@copybara>"),
+    mode = "SQUASH",
+    transformations = [
+        # Add source attribution header
+        core.replace(
+            before = "# http://editorconfig.org",
+            after = "# Synced from vercel/turborepo\n# http://editorconfig.org",
+        ),
+        # Add max_line_length to base config
+        core.replace(
+            before = "trim_trailing_whitespace = true",
+            after = "trim_trailing_whitespace = true\nmax_line_length = 100",
+        ),
+        # Add markdown section after base (before *.t)
+        core.replace(
+            before = "[*.t]",
+            after = "[*.md]\ntrim_trailing_whitespace = false\nmax_line_length = off\n\n[*.{yml,yaml}]\nindent_size = 2\n\n[*.t]",
+        ),
+        # Add shell config at the end (after Rust section)
+        core.replace(
+            before = "indent_size = 4",
+            after = "indent_size = 4\n\n[*.{sh,bash}]\nindent_size = 2\nshell_variant = bash",
+        ),
+    ],
+)
+
+# Sync multiple config files workflow
+core.workflow(
+    name = "sync_all_configs",
+    origin = git.github_origin(
+        url = "https://github.com/vercel/turborepo",
+        ref = "main",
+    ),
+    destination = folder.destination(),
+    origin_files = glob(include = [
+        ".editorconfig",
+        ".gitattributes",
+    ]),
+    authoring = authoring.overwrite("Copybara <noreply@copybara>"),
+    mode = "SQUASH",
+)
