@@ -49,6 +49,8 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "lint": "eslint . --max-warnings 0",
+    "format": "prettier --write \"src/**/*.ts\" \"__tests__/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.ts\" \"__tests__/**/*.ts\"",
     "check-types": "tsc --noEmit",
     "clean": "rm -rf dist coverage .turbo"
   },
@@ -57,6 +59,8 @@
     "@repo/typescript-config": "workspace:*",
     "@vitest/coverage-v8": "^4.0.18",
     "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.4.2",
     "tsup": "^8.5.1",
     "typescript": "^5.9.3",
     "vitest": "^4.0.18"

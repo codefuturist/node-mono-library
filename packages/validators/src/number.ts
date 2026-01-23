@@ -6,7 +6,9 @@
  * Checks if a value is a valid number (not NaN or Infinity)
  */
 export function isNumber(value: unknown): value is number {
-  return typeof value === "number" && !Number.isNaN(value) && Number.isFinite(value);
+  return (
+    typeof value === "number" && !Number.isNaN(value) && Number.isFinite(value)
+  );
 }
 
 /**

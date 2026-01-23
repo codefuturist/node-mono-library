@@ -67,17 +67,23 @@ describe("object validators", () => {
     });
 
     it("returns false when object is missing keys", () => {
-      expect(hasKeys({ a: 1 } as { a: number; b?: number }, ["a", "b"])).toBe(false);
+      expect(hasKeys({ a: 1 } as { a: number; b?: number }, ["a", "b"])).toBe(
+        false
+      );
     });
   });
 
   describe("hasAnyKey", () => {
     it("returns true when object has at least one key", () => {
-      expect(hasAnyKey({ a: 1 } as { a?: number; b?: number }, ["a", "b"])).toBe(true);
+      expect(
+        hasAnyKey({ a: 1 } as { a?: number; b?: number }, ["a", "b"])
+      ).toBe(true);
     });
 
     it("returns false when object has none of the keys", () => {
-      expect(hasAnyKey({ c: 1 } as { a?: number; b?: number; c: number }, ["a", "b"])).toBe(false);
+      expect(
+        hasAnyKey({ c: 1 } as { a?: number; b?: number; c: number }, ["a", "b"])
+      ).toBe(false);
     });
   });
 

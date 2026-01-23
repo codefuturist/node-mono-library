@@ -109,6 +109,30 @@
       "cache": false,
       "persistent": true
     },
+    "format": {
+      "dependsOn": [],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!dist/**",
+        "!coverage/**",
+        "!.turbo/**"
+      ],
+      "outputs": [],
+      "cache": false,
+      "outputLogs": "new-only"
+    },
+    "format:check": {
+      "dependsOn": [],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!dist/**",
+        "!coverage/**",
+        "!.turbo/**"
+      ],
+      "outputs": [],
+      "cache": true,
+      "outputLogs": "errors-only"
+    },
     "clean": {
       "cache": false
     }

@@ -8,6 +8,9 @@ importers:
 
   .:
     devDependencies:
+      eslint-config-prettier:
+        specifier: ^10.1.8
+        version: 10.1.8(eslint@9.39.2)
       prettier:
         specifier: ^3.8.1
         version: 3.8.1
@@ -178,6 +181,12 @@ importers:
       eslint:
         specifier: ^9.39.2
         version: 9.39.2
+      eslint-config-prettier:
+        specifier: ^10.1.8
+        version: 10.1.8(eslint@9.39.2)
+      prettier:
+        specifier: ^3.4.2
+        version: 3.8.1
       tsup:
         specifier: ^8.5.1
         version: 8.5.1(postcss@8.5.6)(typescript@5.9.3)
@@ -202,6 +211,12 @@ importers:
       eslint:
         specifier: ^9.39.2
         version: 9.39.2
+      eslint-config-prettier:
+        specifier: ^10.1.8
+        version: 10.1.8(eslint@9.39.2)
+      prettier:
+        specifier: ^3.4.2
+        version: 3.8.1
       tsup:
         specifier: ^8.5.1
         version: 8.5.1(postcss@8.5.6)(typescript@5.9.3)

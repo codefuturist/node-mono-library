@@ -5,7 +5,9 @@
 /**
  * Checks if a value is a plain object (not array, null, or other types)
  */
-export function isPlainObject(value: unknown): value is Record<string, unknown> {
+export function isPlainObject(
+  value: unknown
+): value is Record<string, unknown> {
   if (value === null || typeof value !== "object") return false;
   const proto = Object.getPrototypeOf(value);
   return proto === Object.prototype || proto === null;
@@ -42,10 +44,7 @@ export function isNotNullish<T>(value: T | null | undefined): value is T {
 /**
  * Checks if an object has all specified keys
  */
-export function hasKeys<T extends object>(
-  obj: T,
-  keys: (keyof T)[]
-): boolean {
+export function hasKeys<T extends object>(obj: T, keys: (keyof T)[]): boolean {
   return keys.every((key) => key in obj);
 }
 
