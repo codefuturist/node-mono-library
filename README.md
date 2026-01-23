@@ -1,5 +1,25 @@
 # Node Mono Library
 
+<!-- Badges -->
+[![CI](https://github.com/codefuturist/node-mono-library/actions/workflows/ci.yml/badge.svg)](https://github.com/codefuturist/node-mono-library/actions/workflows/ci.yml)
+[![Renovate](https://github.com/codefuturist/node-mono-library/actions/workflows/renovate.yml/badge.svg)](https://github.com/codefuturist/node-mono-library/actions/workflows/renovate.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-20+-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
+[![pnpm](https://img.shields.io/badge/pnpm-9+-F69220?logo=pnpm&logoColor=white)](https://pnpm.io/)
+[![Turborepo](https://img.shields.io/badge/Turborepo-powered-EF4444?logo=turborepo&logoColor=white)](https://turbo.build/)
+
+<!-- Package Versions -->
+[![@repo/utils](https://img.shields.io/npm/v/@repo/utils?label=%40repo%2Futils&color=blue)](https://www.npmjs.com/package/@repo/utils)
+[![@repo/validators](https://img.shields.io/npm/v/@repo/validators?label=%40repo%2Fvalidators&color=blue)](https://www.npmjs.com/package/@repo/validators)
+
+<!-- Code Quality -->
+[![codecov](https://codecov.io/gh/codefuturist/node-mono-library/graph/badge.svg)](https://codecov.io/gh/codefuturist/node-mono-library)
+[![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-FE5196?logo=conventionalcommits&logoColor=white)](https://conventionalcommits.org)
+[![Renovate enabled](https://img.shields.io/badge/renovate-enabled-brightgreen?logo=renovatebot)](https://github.com/codefuturist/node-mono-library/issues/6)
+
+---
+
 A modern TypeScript monorepo with production-ready packages, tools, and a complete admin dashboard.
 
 ## 🚀 Features
