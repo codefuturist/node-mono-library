@@ -7,6 +7,10 @@ import { Command } from "commander";
 import pc from "picocolors";
 import { logger } from "../utils/logger.js";
 
+// Detect if running as pkg binary
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const isPkgBinary = !!(process as any).pkg;
+
 type DemoType =
   | "spinner"
   | "prompts"
@@ -48,6 +52,13 @@ export async function runDemo(type: DemoType): Promise<void> {
       break;
     }
     case "update": {
+      if (isPkgBinary) {
+        logger.warn(
+          "Update demo is not available in binary builds.\n" +
+            "To update, download the latest release from GitHub."
+        );
+        break;
+      }
       const { demoUpdateNotifier } = await import("../utils/update.js");
       await demoUpdateNotifier();
       break;
@@ -58,36 +69,44 @@ export async function runDemo(type: DemoType): Promise<void> {
       break;
     }
     case "all": {
-      const demos: { name: string; fn: () => Promise<void> }[] = [
-        {
-          name: "Spinner (ora)",
-          fn: async () => (await import("../utils/spinner.js")).demoSpinner(),
-        },
-        {
-          name: "Config (conf)",
-          fn: async () => (await import("../utils/store.js")).demoConfig(),
-        },
-        {
-          name: "Exec (execa)",
-          fn: async () => (await import("../utils/exec.js")).demoExeca(),
-        },
-        {
-          name: "Update (update-notifier)",
-          fn: async () =>
-            (await import("../utils/update.js")).demoUpdateNotifier(),
-        },
-        {
-          name: "Async Patterns",
-          fn: async () => (await import("../utils/async.js")).demoAsync(),
-        },
-        // Prompts last as it requires user interaction
-        {
-          name: "Prompts (@inquirer/prompts)",
-          fn: async () => (await import("../utils/prompts.js")).demoPrompts(),
-        },
-      ];
+      const demos: { name: string; fn: () => Promise<void>; skip?: boolean }[] =
+        [
+          {
+            name: "Spinner (ora)",
+            fn: async () => (await import("../utils/spinner.js")).demoSpinner(),
+          },
+          {
+            name: "Config (conf)",
+            fn: async () => (await import("../utils/store.js")).demoConfig(),
+          },
+          {
+            name: "Exec (execa)",
+            fn: async () => (await import("../utils/exec.js")).demoExeca(),
+          },
+          {
+            name: "Update (update-notifier)",
+            fn: async () =>
+              (await import("../utils/update.js")).demoUpdateNotifier(),
+            skip: isPkgBinary, // Skip in binary builds
+          },
+          {
+            name: "Async Patterns",
+            fn: async () => (await import("../utils/async.js")).demoAsync(),
+          },
+          // Prompts last as it requires user interaction
+          {
+            name: "Prompts (@inquirer/prompts)",
+            fn: async () => (await import("../utils/prompts.js")).demoPrompts(),
+          },
+        ];
 
       for (const demo of demos) {
+        if (demo.skip) {
+          logger.blank();
+          console.log(pc.bgYellow(pc.black(` ${demo.name} (Skipped) `)));
+          console.log(pc.dim("Not available in binary builds"));
+          continue;
+        }
         logger.blank();
         console.log(pc.bgCyan(pc.black(` ${demo.name} `)));
         console.log(pc.cyan("─".repeat(50)));

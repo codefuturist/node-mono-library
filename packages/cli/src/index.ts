@@ -18,7 +18,7 @@ export {
 } from "./commands/replace.js";
 
 // Export utilities
-export { logger, consola, LogLevels, type Logger } from "./utils/logger.js";
+export { logger, LogLevels, type Logger } from "./utils/logger.js";
 export { loadConfig, type CliConfig } from "./utils/config.js";
 export {
   createSpinner,

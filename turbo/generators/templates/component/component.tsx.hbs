@@ -1,0 +1,32 @@
+import * as React from "react";
+
+{{#if withProps}}
+export interface {{name}}Props {
+  /** Additional CSS classes */
+  className?: string;
+  /** Content to render inside the component */
+  children?: React.ReactNode;
+}
+
+/**
+ * {{name}} component
+ */
+export function {{name}}({ className, children }: {{name}}Props) {
+  return (
+    <div className={className}>
+      {children}
+    </div>
+  );
+}
+{{else}}
+/**
+ * {{name}} component
+ */
+export function {{name}}() {
+  return (
+    <div>
+      {{name}} component
+    </div>
+  );
+}
+{{/if}}

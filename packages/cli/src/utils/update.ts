@@ -137,7 +137,7 @@ export async function demoUpdateNotifier(): Promise<void> {
 
   // Demo 1: Show current version
   logger.dim("1. Current CLI version:");
-  logger.log(`   ${pc.cyan(CLI_NAME)} v${pc.cyan(VERSION)}`);
+  console.log(`   ${pc.cyan(CLI_NAME)} v${pc.cyan(VERSION)}`);
 
   // Demo 2: Check for updates
   logger.blank();
@@ -151,7 +151,7 @@ export async function demoUpdateNotifier(): Promise<void> {
         `   Update available: ${update.current} → ${update.latest}`
       );
       logger.blank();
-      logger.log(formatUpdateMessage(update));
+      console.log(formatUpdateMessage(update));
     } else {
       logger.success("   You're running the latest version!");
     }
@@ -164,9 +164,9 @@ export async function demoUpdateNotifier(): Promise<void> {
   // Demo 3: Show how non-blocking check works
   logger.blank();
   logger.dim("3. Non-blocking update check (used at CLI startup):");
-  logger.log(`   ${pc.dim("// In your CLI entry point:")}`);
-  logger.log(`   ${pc.cyan("checkForUpdates()")}`);
-  logger.log(
+  console.log(`   ${pc.dim("// In your CLI entry point:")}`);
+  console.log(`   ${pc.cyan("checkForUpdates()")}`);
+  console.log(
     `   ${pc.dim("// Continues immediately, notification shown at exit if update available")}`
   );
 
@@ -175,11 +175,11 @@ export async function demoUpdateNotifier(): Promise<void> {
   logger.dim("4. Getting cached update info:");
   const cached = getCachedUpdateInfo();
   if (cached) {
-    logger.log(
+    console.log(
       `   Cached: ${cached.current} → ${cached.latest} (${cached.type})`
     );
   } else {
-    logger.log(`   ${pc.dim("No cached update info available")}`);
+    console.log(`   ${pc.dim("No cached update info available")}`);
   }
 
   logger.blank();

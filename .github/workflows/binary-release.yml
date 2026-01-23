@@ -57,13 +57,20 @@ jobs:
       - name: Bundle CLI (esbuild)
         run: |
           cd packages/cli
-          npx esbuild src/cli.ts --bundle --platform=node --target=node20 --format=cjs --outfile=bundled/index.js --packages=bundle
+          npx esbuild src/cli.ts --bundle --platform=node --target=node20 --format=cjs --outfile=bundled/index.cjs --packages=bundle --external:update-notifier
         shell: bash
 
       - name: Build binary (pkg)
         run: |
           cd packages/cli
-          npx pkg bundled/index.js -t ${{ matrix.pkg_target }} -o ${{ env.CLI_NAME }}-${{ matrix.target }}${{ runner.os == 'Windows' && '.exe' || '' }}
+          npx pkg bundled/index.cjs -t ${{ matrix.pkg_target }} -o ${{ env.CLI_NAME }}-${{ matrix.target }}${{ runner.os == 'Windows' && '.exe' || '' }} --no-bytecode --public
+        shell: bash
+
+      - name: Sign binary (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          cd packages/cli
+          codesign -f -s - ${{ env.CLI_NAME }}-${{ matrix.target }}
         shell: bash
 
       - name: Upload artifact

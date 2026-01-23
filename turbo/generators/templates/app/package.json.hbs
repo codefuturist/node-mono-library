@@ -1,0 +1,33 @@
+{
+  "name": "{{name}}",
+  "version": "0.1.0",
+  "private": true,
+  "description": "{{description}}",
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "check-types": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@repo/ui": "workspace:*",
+    "@repo/utils": "workspace:*",
+    "next": "^15.3.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@types/node": "^22.15.29",
+    "@types/react": "^19.1.6",
+    "@types/react-dom": "^19.1.6",
+    "eslint": "^9.28.0",
+    {{#if withTailwind}}
+    "postcss": "^8.5.4",
+    "tailwindcss": "^4.1.8",
+    {{/if}}
+    "typescript": "^5.9.3"
+  }
+}

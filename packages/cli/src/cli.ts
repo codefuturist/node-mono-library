@@ -13,10 +13,17 @@ import { transformCommand } from "./commands/transform.js";
 import { replaceCommand } from "./commands/replace.js";
 import { demoCommand } from "./commands/demo.js";
 import { VERSION, CLI_NAME, CLI_DESCRIPTION } from "./constants.js";
-import { checkForUpdates } from "./utils/update.js";
 
 // Check for updates (non-blocking, shows notification at exit if available)
-checkForUpdates();
+// Skip in pkg binary builds as update-notifier uses import.meta.url
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+if (!(process as any).pkg) {
+  import("./utils/update.js")
+    .then(({ checkForUpdates }) => checkForUpdates())
+    .catch(() => {
+      // Silently ignore - update checking is optional
+    });
+}
 
 // Configure the main program
 program

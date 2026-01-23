@@ -1,116 +1,150 @@
 /**
- * Spinner utility for long-running operations
+ * Spinner utility for CLI loading indicators
  *
- * Uses ora - the de facto standard terminal spinner.
- * Features: Multiple spinner styles, colors, prefixes, and promise support.
- *
- * @example
- * // Basic usage
- * const spinner = createSpinner('Loading...');
- * spinner.start();
- * await doWork();
- * spinner.succeed('Done!');
- *
- * @example
- * // With promise wrapper
- * const result = await withSpinner(
- *   fetchData(),
- *   { text: 'Fetching data...', successText: 'Data loaded!' }
- * );
- *
- * @example
- * // Step-by-step operations
- * const steps = createStepSpinner([
- *   { name: 'install', text: 'Installing dependencies...' },
- *   { name: 'build', text: 'Building project...' },
- *   { name: 'test', text: 'Running tests...' },
- * ]);
- * await steps.run('install', () => installDeps());
- * await steps.run('build', () => buildProject());
- * await steps.run('test', () => runTests());
+ * A pkg-compatible spinner using simple console output.
+ * Replaces ora which has issues in pkg binaries.
  */
 
-import ora, { type Ora, type Options as OraOptions } from "ora";
+import pc from "picocolors";
 
-export interface SpinnerOptions extends OraOptions {
-  /** Text to show on success */
-  successText?: string;
-  /** Text to show on failure */
-  failText?: string;
+const frames = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
+
+export interface SpinnerOptions {
+  text?: string;
+  color?: "cyan" | "green" | "yellow" | "red" | "blue" | "magenta";
 }
 
-export interface StepDefinition {
-  name: string;
+export interface Spinner {
+  start: (text?: string) => Spinner;
+  stop: () => Spinner;
+  succeed: (text?: string) => Spinner;
+  fail: (text?: string) => Spinner;
+  warn: (text?: string) => Spinner;
+  info: (text?: string) => Spinner;
   text: string;
+  isSpinning: boolean;
 }
 
-export interface StepSpinner {
-  run: <T>(stepName: string, fn: () => Promise<T>) => Promise<T>;
-  fail: (stepName: string, error?: string) => void;
-  spinner: Ora;
-}
+const colorFns: Record<string, (s: string) => string> = {
+  cyan: pc.cyan,
+  green: pc.green,
+  yellow: pc.yellow,
+  red: pc.red,
+  blue: pc.blue,
+  magenta: pc.magenta,
+};
 
 /**
  * Create a spinner instance
  */
-export function createSpinner(textOrOptions?: string | SpinnerOptions): Ora {
-  const options: OraOptions =
-    typeof textOrOptions === "string"
-      ? { text: textOrOptions }
-      : (textOrOptions ?? {});
+export function createSpinner(options: SpinnerOptions | string = {}): Spinner {
+  const opts: SpinnerOptions =
+    typeof options === "string" ? { text: options } : options;
+  const colorFn = colorFns[opts.color || "cyan"] || pc.cyan;
 
-  return ora({
-    color: "cyan",
-    ...options,
-  });
-}
+  let text = opts.text || "";
+  let isSpinning = false;
+  let frameIndex = 0;
+  let interval: ReturnType<typeof setInterval> | null = null;
 
-/**
- * Wrap a promise with a spinner
- * Automatically shows success/fail based on promise resolution
- */
-export async function withSpinner<T>(
-  promise: Promise<T>,
-  options: SpinnerOptions = {}
-): Promise<T> {
-  const { successText, failText, ...oraOptions } = options;
-  const spinner = createSpinner(oraOptions);
+  const clearLine = () => {
+    if (process.stdout.isTTY) {
+      process.stdout.write("\r\x1b[K");
+    }
+  };
 
-  spinner.start();
+  const render = () => {
+    if (!process.stdout.isTTY) return;
+    const frame = frames[frameIndex] ?? "⠋";
+    frameIndex = (frameIndex + 1) % frames.length;
+    process.stdout.write(`\r${colorFn(frame)} ${text || ""}`);
+  };
 
-  try {
-    const result = await promise;
-    spinner.succeed(successText);
-    return result;
-  } catch (error) {
-    spinner.fail(
-      failText ?? (error instanceof Error ? error.message : "Failed")
-    );
-    throw error;
-  }
-}
+  const spinner: Spinner = {
+    get text() {
+      return text;
+    },
+    set text(value: string) {
+      text = value;
+    },
+    get isSpinning() {
+      return isSpinning;
+    },
 
-/**
- * Create a step-by-step spinner for multi-step operations
- */
-export function createStepSpinner(steps: StepDefinition[]): StepSpinner {
-  const stepMap = new Map(steps.map((s) => [s.name, s]));
-  const spinner = createSpinner();
+    start(newText?: string) {
+      if (newText) text = newText;
+      if (isSpinning) return spinner;
+      isSpinning = true;
 
-  return {
-    spinner,
-
-    async run<T>(stepName: string, fn: () => Promise<T>): Promise<T> {
-      const step = stepMap.get(stepName);
-      if (!step) {
-        throw new Error(`Unknown step: ${stepName}`);
+      if (process.stdout.isTTY) {
+        interval = setInterval(render, 80);
+        render();
+      } else {
+        // Non-TTY: just print the text
+        console.log(`⠋ ${text}`);
       }
+      return spinner;
+    },
 
-      spinner.text = step.text;
+    stop() {
+      if (!isSpinning) return spinner;
+      isSpinning = false;
+      if (interval) {
+        clearInterval(interval);
+        interval = null;
+      }
+      clearLine();
+      return spinner;
+    },
+
+    succeed(newText?: string) {
+      spinner.stop();
+      console.log(`${pc.green("✔")} ${newText || text}`);
+      return spinner;
+    },
+
+    fail(newText?: string) {
+      spinner.stop();
+      console.log(`${pc.red("✖")} ${newText || text}`);
+      return spinner;
+    },
+
+    warn(newText?: string) {
+      spinner.stop();
+      console.log(`${pc.yellow("⚠")} ${newText || text}`);
+      return spinner;
+    },
+
+    info(newText?: string) {
+      spinner.stop();
+      console.log(`${pc.cyan("ℹ")} ${newText || text}`);
+      return spinner;
+    },
+  };
+
+  return spinner;
+}
+
+export interface StepDefinition<T> {
+  text: string;
+  run: () => Promise<T>;
+}
+
+export interface StepSpinner {
+  run: <T>(step: StepDefinition<T>) => Promise<T>;
+  runAll: <T>(steps: StepDefinition<T>[]) => Promise<T[]>;
+}
+
+/**
+ * Create a step spinner for running sequential tasks
+ */
+export function createStepSpinner(): StepSpinner {
+  return {
+    async run<T>(step: StepDefinition<T>): Promise<T> {
+      const spinner = createSpinner(step.text);
       spinner.start();
-
       try {
-        const result = await fn();
+        const result = await step.run();
         spinner.succeed();
         return result;
       } catch (error) {
@@ -119,51 +153,79 @@ export function createStepSpinner(steps: StepDefinition[]): StepSpinner {
       }
     },
 
-    fail(stepName: string, error?: string) {
-      const step = stepMap.get(stepName);
-      spinner.text = error ?? step?.text ?? stepName;
-      spinner.fail();
+    async runAll<T>(steps: StepDefinition<T>[]): Promise<T[]> {
+      const results: T[] = [];
+      for (const step of steps) {
+        results.push(await this.run(step));
+      }
+      return results;
     },
   };
+}
+
+/**
+ * Run a function with a spinner
+ */
+export async function withSpinner<T>(
+  text: string,
+  fn: () => Promise<T>
+): Promise<T> {
+  const spinner = createSpinner(text);
+  spinner.start();
+  try {
+    const result = await fn();
+    spinner.succeed();
+    return result;
+  } catch (error) {
+    spinner.fail();
+    throw error;
+  }
 }
 
 /**
  * Demo function showing spinner capabilities
  */
 export async function demoSpinner(): Promise<void> {
-  const { logger } = await import("./logger.js");
-
-  logger.info("Spinner Demo - ora package\n");
+  console.log("Simple Spinner Demo\n");
 
   // Demo 1: Basic spinner
-  const spinner1 = createSpinner("Processing files...");
-  spinner1.start();
+  console.log(pc.dim("1. Basic spinner:"));
+  const spinner = createSpinner("Loading...");
+  spinner.start();
   await new Promise((r) => setTimeout(r, 1500));
-  spinner1.succeed("Files processed successfully");
+  spinner.succeed("Loaded successfully!");
 
-  // Demo 2: Different states
-  const spinner2 = createSpinner("Checking configuration...");
+  // Demo 2: Failure case
+  console.log(pc.dim("\n2. Failure case:"));
+  const spinner2 = createSpinner("Checking connection...");
   spinner2.start();
   await new Promise((r) => setTimeout(r, 1000));
-  spinner2.warn("Configuration has warnings");
+  spinner2.fail("Connection failed");
 
-  // Demo 3: withSpinner helper
-  await withSpinner(new Promise((r) => setTimeout(r, 1500)), {
-    text: "Installing dependencies...",
-    successText: "Dependencies installed",
-  });
+  // Demo 3: Warning case
+  console.log(pc.dim("\n3. Warning case:"));
+  const spinner3 = createSpinner("Validating...");
+  spinner3.start();
+  await new Promise((r) => setTimeout(r, 1000));
+  spinner3.warn("Validation passed with warnings");
 
-  // Demo 4: Step spinner
-  const steps = createStepSpinner([
-    { name: "fetch", text: "Fetching remote data..." },
-    { name: "parse", text: "Parsing response..." },
-    { name: "save", text: "Saving to disk..." },
+  // Demo 4: Sequential steps
+  console.log(pc.dim("\n4. Sequential steps with createStepSpinner:"));
+  const stepSpinner = createStepSpinner();
+  await stepSpinner.runAll([
+    { text: "Installing dependencies", run: () => delay(800) },
+    { text: "Building project", run: () => delay(1200) },
+    { text: "Running tests", run: () => delay(1000) },
   ]);
 
-  await steps.run("fetch", () => new Promise((r) => setTimeout(r, 800)));
-  await steps.run("parse", () => new Promise((r) => setTimeout(r, 600)));
-  await steps.run("save", () => new Promise((r) => setTimeout(r, 400)));
+  // Demo 5: withSpinner helper
+  console.log(pc.dim("\n5. Using withSpinner helper:"));
+  await withSpinner("Processing data...", async () => {
+    await delay(1500);
+    return "done";
+  });
 
-  logger.blank();
-  logger.success("All spinner demos completed!");
+  console.log(pc.green("\n✔ Spinner demo completed!"));
 }
+
+const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));

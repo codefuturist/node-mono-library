@@ -1,0 +1,50 @@
+{
+  "name": "@repo/{{name}}",
+  "version": "0.0.1",
+  "private": {{#if (eq type "library")}}false{{else}}true{{/if}},
+  "description": "{{description}}",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": {{#if (eq type "library")}}"./dist/index.js"{{else}}"./src/index.ts"{{/if}},
+      "require": {{#if (eq type "library")}}"./dist/index.cjs"{{else}}"./src/index.ts"{{/if}},
+      "types": {{#if (eq type "library")}}"./dist/index.d.ts"{{else}}"./src/index.ts"{{/if}}
+    }
+  },
+  "main": {{#if (eq type "library")}}"./dist/index.cjs"{{else}}"./src/index.ts"{{/if}},
+  "module": {{#if (eq type "library")}}"./dist/index.js"{{else}}"./src/index.ts"{{/if}},
+  "types": {{#if (eq type "library")}}"./dist/index.d.ts"{{else}}"./src/index.ts"{{/if}},
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    {{#if (eq type "library")}}
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint .",
+    "check-types": "tsc --noEmit",
+    "clean": "rm -rf dist node_modules .turbo"
+    {{else}}
+    "check-types": "tsc --noEmit",
+    "clean": "rm -rf node_modules .turbo"
+    {{/if}}
+  },
+  "dependencies": {},
+  "devDependencies": {
+    {{#if (eq type "library")}}
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@repo/vitest-config": "workspace:*",
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.3",
+    "vitest": "^3.1.4"
+    {{else}}
+    "@repo/typescript-config": "workspace:*",
+    "typescript": "^5.9.3"
+    {{/if}}
+  }
+}
