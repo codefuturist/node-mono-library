@@ -16,6 +16,7 @@
     "hooks:commit-msg": "commitlint --edit",
     "hooks:test": "pnpm hooks:pre-commit && echo 'feat: test commit' | pnpm commitlint",
     "hooks:skip": "echo 'Use: git commit --no-verify' && echo 'Or: HUSKY=0 git commit'",
+    "commit:no-verify": "git commit --no-verify",
     "check-types": "turbo run check-types",
     "clean": "turbo run clean && rm -rf node_modules/.cache .turbo",
     "build:affected": "turbo run build --affected",
