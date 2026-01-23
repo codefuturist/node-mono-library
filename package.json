@@ -12,7 +12,17 @@
     "check-types": "turbo run check-types",
     "clean": "turbo run clean && rm -rf node_modules/.cache .turbo",
     "build:affected": "turbo run build --affected",
-    "ci": "turbo run build lint check-types test --affected"
+    "ci": "turbo run build lint check-types test --affected",
+    "flow:feature:start": "read -p 'Feature name: ' name && git flow feature start \"$name\"",
+    "flow:feature:finish": "git flow feature finish",
+    "flow:feature:publish": "git flow feature publish",
+    "flow:release:start": "read -p 'Version (e.g. 1.0.0): ' ver && git flow release start \"$ver\"",
+    "flow:release:finish": "read -p 'Version: ' ver && git flow release finish \"$ver\"",
+    "flow:release:publish": "git flow release publish",
+    "flow:hotfix:start": "read -p 'Hotfix version: ' ver && git flow hotfix start \"$ver\"",
+    "flow:hotfix:finish": "read -p 'Hotfix version: ' ver && git flow hotfix finish \"$ver\"",
+    "flow:init": "git flow init -d",
+    "flow:status": "git branch -a && echo '\\n--- Current branch ---' && git branch --show-current"
   },
   "devDependencies": {
     "prettier": "^3.8.1",
