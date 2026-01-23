@@ -7,7 +7,14 @@ import { Command } from "commander";
 import pc from "picocolors";
 import { logger } from "../utils/logger.js";
 
-type DemoType = "spinner" | "prompts" | "exec" | "config" | "update" | "all";
+type DemoType =
+  | "spinner"
+  | "prompts"
+  | "exec"
+  | "config"
+  | "update"
+  | "async"
+  | "all";
 
 export interface DemoOptions {
   type: DemoType;
@@ -45,6 +52,11 @@ export async function runDemo(type: DemoType): Promise<void> {
       await demoUpdateNotifier();
       break;
     }
+    case "async": {
+      const { demoAsync } = await import("../utils/async.js");
+      await demoAsync();
+      break;
+    }
     case "all": {
       const demos: { name: string; fn: () => Promise<void> }[] = [
         {
@@ -63,6 +75,10 @@ export async function runDemo(type: DemoType): Promise<void> {
           name: "Update (update-notifier)",
           fn: async () =>
             (await import("../utils/update.js")).demoUpdateNotifier(),
+        },
+        {
+          name: "Async Patterns",
+          fn: async () => (await import("../utils/async.js")).demoAsync(),
         },
         // Prompts last as it requires user interaction
         {
@@ -93,7 +109,7 @@ export const demoCommand = new Command("demo")
   .description("Run demos showcasing CLI utilities and best practices")
   .argument(
     "[type]",
-    "Demo to run (spinner|prompts|exec|config|update|all)",
+    "Demo to run (spinner|prompts|exec|config|update|async|all)",
     "all"
   )
   .addHelpText(
@@ -105,11 +121,12 @@ ${pc.dim("Available demos:")}
   ${pc.cyan("exec")}      - Process execution with execa
   ${pc.cyan("config")}    - Configuration storage with conf
   ${pc.cyan("update")}    - Update notifications with update-notifier
+  ${pc.cyan("async")}     - Async/parallel processing patterns
   ${pc.cyan("all")}       - Run all demos in sequence
 
 ${pc.dim("Examples:")}
   ${pc.cyan("$")} repo-cli demo spinner
-  ${pc.cyan("$")} repo-cli demo prompts
+  ${pc.cyan("$")} repo-cli demo async
   ${pc.cyan("$")} repo-cli demo all
 `
   )

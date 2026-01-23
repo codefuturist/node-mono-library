@@ -4,6 +4,9 @@
  * Uses update-notifier - Notify users when a package update is available.
  * Features: Non-blocking check, persistent caching, customizable notifications.
  *
+ * Note: Update checking is disabled in standalone binary builds (pkg) since
+ * the binary users should use the install script or download new releases.
+ *
  * @example
  * // At CLI startup
  * import { checkForUpdates } from './utils/update.js';
@@ -17,9 +20,15 @@
  * }
  */
 
-import updateNotifier, { type UpdateInfo } from "update-notifier";
 import pc from "picocolors";
 import { CLI_NAME, VERSION } from "../constants.js";
+
+/**
+ * Detect if running as a pkg binary
+ * pkg sets process.pkg when running as a bundled binary
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const isPkgBinary: boolean = !!(process as any).pkg;
 
 // Package info for update-notifier
 const pkg = {
@@ -40,46 +49,79 @@ export interface UpdateOptions {
 }
 
 /**
+ * Update info type
+ */
+export interface UpdateInfo {
+  latest: string;
+  current: string;
+  type: "latest" | "major" | "minor" | "patch" | "prerelease" | "build";
+  name: string;
+}
+
+/**
  * Check for updates (non-blocking)
  * This is meant to be called at CLI startup - it won't slow down execution
+ * Note: Disabled in pkg binary builds
  */
 export function checkForUpdates(options: UpdateOptions = {}): void {
+  // Skip update checks in binary builds - users should use install script
+  if (isPkgBinary) {
+    return;
+  }
+
   const {
     updateCheckInterval = 1000 * 60 * 60 * 24, // 1 day
     shouldNotify = true,
     defer = true,
   } = options;
 
-  const notifier = updateNotifier({
-    pkg,
-    updateCheckInterval,
-  });
+  // Dynamic import to avoid loading update-notifier in binary builds
+  import("update-notifier")
+    .then(({ default: updateNotifier }) => {
+      const notifier = updateNotifier({
+        pkg,
+        updateCheckInterval,
+      });
 
-  if (shouldNotify) {
-    // This will show a message at process exit if an update is available
-    notifier.notify({
-      defer,
-      message: `Update available: ${pc.dim("{currentVersion}")} → ${pc.green("{latestVersion}")}
+      if (shouldNotify) {
+        // This will show a message at process exit if an update is available
+        notifier.notify({
+          defer,
+          message: `Update available: ${pc.dim("{currentVersion}")} → ${pc.green("{latestVersion}")}
 Run ${pc.cyan(`npm i -g ${CLI_NAME}`)} to update`,
+        });
+      }
+    })
+    .catch(() => {
+      // Silently ignore errors loading update-notifier
     });
-  }
 }
 
 /**
  * Check for updates synchronously and return result
  * Useful when you need to programmatically check for updates
+ * Note: Returns undefined in pkg binary builds
  */
 export async function checkForUpdatesSync(): Promise<UpdateInfo | undefined> {
-  const notifier = updateNotifier({
-    pkg,
-    updateCheckInterval: 0, // Always check
-  });
+  if (isPkgBinary) {
+    return undefined;
+  }
 
-  // Fetch update info
-  const update = await notifier.fetchInfo();
+  try {
+    const { default: updateNotifier } = await import("update-notifier");
+    const notifier = updateNotifier({
+      pkg,
+      updateCheckInterval: 0, // Always check
+    });
 
-  if (update.type !== "latest") {
-    return update;
+    // Fetch update info
+    const update = await notifier.fetchInfo();
+
+    if (update.type !== "latest") {
+      return update;
+    }
+  } catch {
+    // Silently ignore errors
   }
 
   return undefined;
@@ -87,14 +129,24 @@ export async function checkForUpdatesSync(): Promise<UpdateInfo | undefined> {
 
 /**
  * Get cached update info (from last check)
+ * Note: Returns undefined in pkg binary builds
  */
-export function getCachedUpdateInfo(): UpdateInfo | undefined {
-  const notifier = updateNotifier({
-    pkg,
-    updateCheckInterval: 1000 * 60 * 60 * 24,
-  });
+export async function getCachedUpdateInfo(): Promise<UpdateInfo | undefined> {
+  if (isPkgBinary) {
+    return undefined;
+  }
 
-  return notifier.update;
+  try {
+    const { default: updateNotifier } = await import("update-notifier");
+    const notifier = updateNotifier({
+      pkg,
+      updateCheckInterval: 1000 * 60 * 60 * 24,
+    });
+
+    return notifier.update;
+  } catch {
+    return undefined;
+  }
 }
 
 /**
@@ -131,6 +183,13 @@ export async function demoUpdateNotifier(): Promise<void> {
   const { logger } = await import("./logger.js");
 
   logger.info("Update Notifier Demo - update-notifier package\n");
+
+  // Check if running as binary
+  if (isPkgBinary) {
+    logger.warn("Running as standalone binary - update checking is disabled.");
+    logger.info("To update, download the latest release from GitHub.");
+    return;
+  }
 
   // Demo 1: Show current version
   logger.dim("1. Current CLI version:");
@@ -170,7 +229,7 @@ export async function demoUpdateNotifier(): Promise<void> {
   // Demo 4: Cached info
   logger.blank();
   logger.dim("4. Getting cached update info:");
-  const cached = getCachedUpdateInfo();
+  const cached = await getCachedUpdateInfo();
   if (cached) {
     console.log(
       `   Cached: ${cached.current} → ${cached.latest} (${cached.type})`

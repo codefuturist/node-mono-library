@@ -64,6 +64,13 @@ export {
   formatUpdateMessage,
   type UpdateOptions,
 } from "./utils/update.js";
+export {
+  runWithConcurrencyLimit,
+  retry,
+  debounce,
+  throttle,
+  type RetryOptions,
+} from "./utils/async.js";
 
 // Export constants
 export { VERSION, CLI_NAME, CLI_DESCRIPTION } from "./constants.js";
