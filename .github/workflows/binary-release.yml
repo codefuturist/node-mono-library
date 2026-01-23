@@ -74,7 +74,7 @@ jobs:
         shell: bash
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: ${{ env.CLI_NAME }}-${{ matrix.target }}
           path: packages/cli/${{ env.CLI_NAME }}-${{ matrix.target }}${{ runner.os == 'Windows' && '.exe' || '' }}
