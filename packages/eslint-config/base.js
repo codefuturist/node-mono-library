@@ -27,6 +27,21 @@ export const config = [
     },
   },
   {
-    ignores: ["dist/**", "build/**", "coverage/**", ".turbo/**", "node_modules/**"],
+    ignores: [
+      "dist/**",
+      "build/**",
+      "coverage/**",
+      ".turbo/**",
+      "node_modules/**",
+      "examples/**",
+      "**/*.config.ts",
+      "**/*.config.js",
+    ],
+  },
+  {
+    rules: {
+      "no-console": "off",
+      "@typescript-eslint/no-unused-vars": "warn",
+    },
   },
 ];

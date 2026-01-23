@@ -39,13 +39,20 @@ const processedUser = {
   ageValid: isInRange(rawInput.age, 18, 100),
 };
 
-console.log("Input:", JSON.stringify(pick(rawInput, ["name", "email", "age"]), null, 2));
+console.log(
+  "Input:",
+  JSON.stringify(pick(rawInput, ["name", "email", "age"]), null, 2)
+);
 console.log("\nProcessed:");
 console.log(`  Name: ${processedUser.name} (${processedUser.slug})`);
-console.log(`  Email: ${processedUser.email} ${processedUser.emailValid ? "✓" : "✗"}`);
+console.log(
+  `  Email: ${processedUser.email} ${processedUser.emailValid ? "✓" : "✗"}`
+);
 console.log(`  Bio: ${processedUser.bio}`);
 console.log(`  Tags: [${processedUser.tags.join(", ")}]`);
-console.log(`  Age: ${processedUser.age} ${processedUser.ageValid ? "✓" : "✗"}`);
+console.log(
+  `  Age: ${processedUser.age} ${processedUser.ageValid ? "✓" : "✗"}`
+);
 
 // Example 2: Form validation
 console.log("\n\n📋 Example 2: Contact Form Validation\n");
@@ -171,7 +178,9 @@ processedUsers.forEach((user) => {
 const batches = chunk(processedUsers, 2);
 console.log(`\nProcessing in ${batches.length} batches of 2:`);
 batches.forEach((batch, i) => {
-  console.log(`  Batch ${i + 1}: ${batch.map((u) => u.displayName).join(", ")}`);
+  console.log(
+    `  Batch ${i + 1}: ${batch.map((u) => u.displayName).join(", ")}`
+  );
 });
 
 // Example 4: Safe data cloning

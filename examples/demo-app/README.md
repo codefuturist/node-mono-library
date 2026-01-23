@@ -43,6 +43,7 @@ import { isInRange } from "@repo/validators/number";
 ### Practical Usage
 
 The examples show:
+
 - Form validation
 - Data transformation
 - API response handling

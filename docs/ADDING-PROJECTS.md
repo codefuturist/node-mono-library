@@ -23,12 +23,14 @@ pnpm workspace:list
 Packages are reusable libraries shared across apps (e.g., `@repo/auth`, `@repo/hooks`).
 
 ### Using the script:
+
 ```bash
 pnpm new:lib
 # Enter package name when prompted (e.g., "auth")
 ```
 
 ### Manual steps:
+
 ```bash
 # 1. Create folder structure
 mkdir -p packages/my-package/{src,__tests__}
@@ -56,6 +58,7 @@ pnpm test
 ```
 
 ### Package.json template:
+
 ```json
 {
   "name": "@repo/my-package",
@@ -98,17 +101,20 @@ pnpm test
 Apps are deployable applications (e.g., Next.js, Vite).
 
 ### Using Next.js:
+
 ```bash
 pnpm dlx create-next-app@latest apps/my-app
 # Select options as needed
 ```
 
 ### Using Vite:
+
 ```bash
 pnpm dlx create-vite@latest apps/my-app
 ```
 
 ### Manual steps after creation:
+
 ```bash
 # 1. Add to workspace (if not in apps/*)
 # Edit pnpm-workspace.yaml if needed
@@ -125,22 +131,26 @@ cp packages/utils/eslint.config.mjs apps/my-app/
 ## 3. After Adding New Project
 
 ### 1. Install dependencies:
+
 ```bash
 pnpm install
 ```
 
 ### 2. Verify workspace:
+
 ```bash
 pnpm workspace:list
 ```
 
 ### 3. Add changeset (for packages):
+
 ```bash
 pnpm changeset
 # Select package, version type, and add description
 ```
 
 ### 4. Build and test:
+
 ```bash
 # Build everything
 pnpm build
@@ -153,6 +163,7 @@ pnpm --filter @repo/my-package test
 ```
 
 ### 5. Commit changes:
+
 ```bash
 git add .
 pnpm commit
@@ -161,7 +172,9 @@ pnpm commit
 ## 4. Common Patterns
 
 ### Internal dependencies:
+
 In your new package's `package.json`, reference other packages:
+
 ```json
 {
   "dependencies": {
@@ -172,20 +185,24 @@ In your new package's `package.json`, reference other packages:
 ```
 
 ### Turbo caching:
+
 Turbo automatically caches builds. No configuration needed for standard setups.
 
 ### Publishing:
+
 Only packages (not apps) are published to npm. Update `.changeset/config.json` if you want to ignore certain packages.
 
 ## 5. Troubleshooting
 
 ### Package not found:
+
 ```bash
 # Clear and reinstall
 pnpm pkg:fresh
 ```
 
 ### Build errors:
+
 ```bash
 # Clean everything
 pnpm clean
@@ -193,6 +210,7 @@ pnpm build
 ```
 
 ### Type errors:
+
 ```bash
 # Build dependencies first
 pnpm build

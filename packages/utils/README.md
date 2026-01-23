@@ -40,25 +40,38 @@ pnpm install
 ### String Utilities
 
 ```typescript
-import { capitalize, toKebabCase, toCamelCase, truncate, randomString } from "@repo/utils/string";
+import {
+  capitalize,
+  toKebabCase,
+  toCamelCase,
+  truncate,
+  randomString,
+} from "@repo/utils/string";
 
-capitalize("hello");        // "Hello"
-toKebabCase("helloWorld");  // "hello-world"
+capitalize("hello"); // "Hello"
+toKebabCase("helloWorld"); // "hello-world"
 toCamelCase("hello-world"); // "helloWorld"
 truncate("hello world", 8); // "hello..."
-randomString(10);           // "aBcDeFgHiJ"
+randomString(10); // "aBcDeFgHiJ"
 ```
 
 ### Array Utilities
 
 ```typescript
-import { unique, chunk, shuffle, groupBy, first, last } from "@repo/utils/array";
+import {
+  unique,
+  chunk,
+  shuffle,
+  groupBy,
+  first,
+  last,
+} from "@repo/utils/array";
 
-unique([1, 2, 2, 3]);       // [1, 2, 3]
-chunk([1, 2, 3, 4, 5], 2);  // [[1, 2], [3, 4], [5]]
-first([1, 2, 3]);           // 1
-last([1, 2, 3]);            // 3
-groupBy(users, u => u.role); // { admin: [...], user: [...] }
+unique([1, 2, 2, 3]); // [1, 2, 3]
+chunk([1, 2, 3, 4, 5], 2); // [[1, 2], [3, 4], [5]]
+first([1, 2, 3]); // 1
+last([1, 2, 3]); // 3
+groupBy(users, (u) => u.role); // { admin: [...], user: [...] }
 ```
 
 ### Object Utilities
@@ -66,20 +79,26 @@ groupBy(users, u => u.role); // { admin: [...], user: [...] }
 ```typescript
 import { deepClone, deepMerge, pick, omit, isEmpty } from "@repo/utils/object";
 
-deepClone({ a: { b: 1 } });           // Deep copy
-deepMerge(obj1, obj2);                // Recursively merge
-pick(user, ["name", "email"]);        // { name: ..., email: ... }
-omit(user, ["password"]);             // User without password
-isEmpty({});                          // true
+deepClone({ a: { b: 1 } }); // Deep copy
+deepMerge(obj1, obj2); // Recursively merge
+pick(user, ["name", "email"]); // { name: ..., email: ... }
+omit(user, ["password"]); // User without password
+isEmpty({}); // true
 ```
 
 ### Async Utilities
 
 ```typescript
-import { delay, retry, debounce, throttle, parallelLimit } from "@repo/utils/async";
+import {
+  delay,
+  retry,
+  debounce,
+  throttle,
+  parallelLimit,
+} from "@repo/utils/async";
 
-await delay(1000);                     // Wait 1 second
-await retry(fetchData, { maxAttempts: 3 });  // Retry with backoff
+await delay(1000); // Wait 1 second
+await retry(fetchData, { maxAttempts: 3 }); // Retry with backoff
 const debouncedFn = debounce(fn, 300); // Debounce
 const throttledFn = throttle(fn, 100); // Throttle
 await parallelLimit(items, 5, asyncFn); // Limit concurrency
@@ -111,41 +130,41 @@ pnpm lint
 
 ### String Utilities
 
-| Function | Description |
-|----------|-------------|
-| `capitalize(str)` | Capitalizes the first letter |
-| `toKebabCase(str)` | Converts to kebab-case |
-| `toCamelCase(str)` | Converts to camelCase |
-| `truncate(str, length, suffix?)` | Truncates with optional suffix |
-| `randomString(length)` | Generates random alphanumeric string |
+| Function                         | Description                          |
+| -------------------------------- | ------------------------------------ |
+| `capitalize(str)`                | Capitalizes the first letter         |
+| `toKebabCase(str)`               | Converts to kebab-case               |
+| `toCamelCase(str)`               | Converts to camelCase                |
+| `truncate(str, length, suffix?)` | Truncates with optional suffix       |
+| `randomString(length)`           | Generates random alphanumeric string |
 
 ### Array Utilities
 
-| Function | Description |
-|----------|-------------|
-| `unique(arr)` | Removes duplicates |
-| `chunk(arr, size)` | Splits into chunks |
-| `shuffle(arr)` | Randomizes order (Fisher-Yates) |
-| `groupBy(arr, keyFn)` | Groups by key function |
-| `first(arr)` | Returns first element |
-| `last(arr)` | Returns last element |
+| Function              | Description                     |
+| --------------------- | ------------------------------- |
+| `unique(arr)`         | Removes duplicates              |
+| `chunk(arr, size)`    | Splits into chunks              |
+| `shuffle(arr)`        | Randomizes order (Fisher-Yates) |
+| `groupBy(arr, keyFn)` | Groups by key function          |
+| `first(arr)`          | Returns first element           |
+| `last(arr)`           | Returns last element            |
 
 ### Object Utilities
 
-| Function | Description |
-|----------|-------------|
-| `deepClone(obj)` | Deep clones object |
-| `deepMerge(...objs)` | Deep merges objects |
-| `pick(obj, keys)` | Picks specified keys |
-| `omit(obj, keys)` | Omits specified keys |
-| `isEmpty(obj)` | Checks if object is empty |
+| Function             | Description               |
+| -------------------- | ------------------------- |
+| `deepClone(obj)`     | Deep clones object        |
+| `deepMerge(...objs)` | Deep merges objects       |
+| `pick(obj, keys)`    | Picks specified keys      |
+| `omit(obj, keys)`    | Omits specified keys      |
+| `isEmpty(obj)`       | Checks if object is empty |
 
 ### Async Utilities
 
-| Function | Description |
-|----------|-------------|
-| `delay(ms)` | Promise-based delay |
-| `retry(fn, options)` | Retry with exponential backoff |
-| `debounce(fn, ms)` | Debounces function calls |
-| `throttle(fn, ms)` | Throttles function calls |
+| Function                          | Description                               |
+| --------------------------------- | ----------------------------------------- |
+| `delay(ms)`                       | Promise-based delay                       |
+| `retry(fn, options)`              | Retry with exponential backoff            |
+| `debounce(fn, ms)`                | Debounces function calls                  |
+| `throttle(fn, ms)`                | Throttles function calls                  |
 | `parallelLimit(items, limit, fn)` | Parallel execution with concurrency limit |

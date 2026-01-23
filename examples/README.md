@@ -11,6 +11,7 @@ A comprehensive demonstration of `@repo/utils` and `@repo/validators` libraries 
 **Location:** `examples/demo-app/`
 
 **Quick Start:**
+
 ```bash
 cd examples/demo-app
 
@@ -26,6 +27,7 @@ pnpm validate   # Validation functions demo
 ```
 
 **What it demonstrates:**
+
 - Clean imports using subpath exports
 - Form validation patterns
 - Data transformation workflows
@@ -54,6 +56,7 @@ npm install @repo/utils @repo/validators
 ```
 
 Example usage:
+
 ```typescript
 import { capitalize, chunk } from "@repo/utils";
 import { isEmail, isInRange } from "@repo/validators";
@@ -64,10 +67,11 @@ import { isEmail, isInRange } from "@repo/validators";
 ## Tips for Best Results
 
 1. **Import from subpaths** for better tree-shaking:
+
    ```typescript
    // Good - tree-shakeable
    import { capitalize } from "@repo/utils/string";
-   
+
    // Also works, but may include unused code
    import { capitalize } from "@repo/utils";
    ```

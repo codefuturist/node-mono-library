@@ -13,6 +13,7 @@ pnpm changeset
 ```
 
 Follow the prompts to:
+
 1. Select which packages changed
 2. Choose the semver bump type (major/minor/patch)
 3. Write a summary of changes
@@ -39,11 +40,11 @@ This runs all checks and publishes to npm.
 
 ## Commands
 
-| Command | Description |
-|---------|-------------|
-| `pnpm changeset` | Create a new changeset |
+| Command                 | Description                       |
+| ----------------------- | --------------------------------- |
+| `pnpm changeset`        | Create a new changeset            |
 | `pnpm version-packages` | Bump versions based on changesets |
-| `pnpm release` | Build, test, and publish packages |
+| `pnpm release`          | Build, test, and publish packages |
 
 ## Automated Workflow
 
@@ -95,6 +96,7 @@ pnpm release
 ## CI/CD Integration
 
 The `.github/workflows/release.yml` workflow:
+
 - Triggers on pushes to `main` branch
 - Creates "Version Packages" PR automatically
 - Publishes to npm when version PR is merged
@@ -102,6 +104,7 @@ The `.github/workflows/release.yml` workflow:
 ### Required Secrets
 
 To enable npm publishing, add to GitHub repository secrets:
+
 - `NPM_TOKEN` - Your npm access token ([create one](https://www.npmjs.com/settings/~/tokens))
 
 ## Learn More

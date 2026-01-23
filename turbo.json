@@ -1,39 +1,15 @@
 {
   "$schema": "https://turborepo.dev/schema.json",
   "ui": "tui",
-  "globalDependencies": [
-    ".env",
-    "tsconfig.json"
-  ],
-  "globalEnv": [
-    "NODE_ENV",
-    "CI"
-  ],
-  "globalPassThroughEnv": [
-    "npm_lifecycle_event",
-    "TURBO_TEAM",
-    "TURBO_TOKEN"
-  ],
+  "globalDependencies": [".env", "tsconfig.json"],
+  "globalEnv": ["NODE_ENV", "CI"],
+  "globalPassThroughEnv": ["npm_lifecycle_event", "TURBO_TEAM", "TURBO_TOKEN"],
   "tasks": {
     "build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "inputs": [
-        "$TURBO_DEFAULT$",
-        ".env*",
-        "!README.md",
-        "!**/*.test.ts"
-      ],
-      "outputs": [
-        ".next/**",
-        "!.next/cache/**",
-        "dist/**"
-      ],
-      "env": [
-        "VERCEL_URL",
-        "NEXT_PUBLIC_*"
-      ],
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", ".env*", "!README.md", "!**/*.test.ts"],
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"],
+      "env": ["VERCEL_URL", "NEXT_PUBLIC_*"],
       "outputLogs": "new-only"
     },
     "lint": {
@@ -51,9 +27,7 @@
       "outputLogs": "errors-only"
     },
     "check-types": {
-      "dependsOn": [
-        "^check-types"
-      ],
+      "dependsOn": ["^check-types"],
       "inputs": [
         "$TURBO_DEFAULT$",
         "!**/*.md",
@@ -63,22 +37,15 @@
       "cache": true
     },
     "test": {
-      "dependsOn": [
-        "^build"
-      ],
+      "dependsOn": ["^build"],
       "inputs": [
         "$TURBO_DEFAULT$",
         "**/*.test.ts",
         "**/*.test.tsx",
         "**/*.spec.ts"
       ],
-      "outputs": [
-        "coverage/**"
-      ],
-      "env": [
-        "CI",
-        "NODE_ENV"
-      ],
+      "outputs": ["coverage/**"],
+      "env": ["CI", "NODE_ENV"],
       "cache": true
     },
     "test:watch": {
@@ -87,49 +54,31 @@
       "interactive": true
     },
     "test:coverage": {
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [
-        "coverage/**"
-      ],
+      "dependsOn": ["^build"],
+      "outputs": ["coverage/**"],
       "cache": true
     },
     "dev": {
-      "dependsOn": [
-        "^build"
-      ],
+      "dependsOn": ["^build"],
       "cache": false,
       "persistent": true,
       "interactive": true
     },
     "start": {
-      "dependsOn": [
-        "build"
-      ],
+      "dependsOn": ["build"],
       "cache": false,
       "persistent": true
     },
     "format": {
       "dependsOn": [],
-      "inputs": [
-        "$TURBO_DEFAULT$",
-        "!dist/**",
-        "!coverage/**",
-        "!.turbo/**"
-      ],
+      "inputs": ["$TURBO_DEFAULT$", "!dist/**", "!coverage/**", "!.turbo/**"],
       "outputs": [],
       "cache": false,
       "outputLogs": "new-only"
     },
     "format:check": {
       "dependsOn": [],
-      "inputs": [
-        "$TURBO_DEFAULT$",
-        "!dist/**",
-        "!coverage/**",
-        "!.turbo/**"
-      ],
+      "inputs": ["$TURBO_DEFAULT$", "!dist/**", "!coverage/**", "!.turbo/**"],
       "outputs": [],
       "cache": true,
       "outputLogs": "errors-only"

@@ -66,10 +66,10 @@ import { delay, retry } from "@repo/utils/async";
 // Or import everything
 import * as utils from "@repo/utils";
 
-capitalize("hello");       // "Hello"
-unique([1, 2, 2, 3]);     // [1, 2, 3]
-deepClone({ a: 1 });      // { a: 1 } (deep copy)
-await delay(1000);        // Wait 1 second
+capitalize("hello"); // "Hello"
+unique([1, 2, 2, 3]); // [1, 2, 3]
+deepClone({ a: 1 }); // { a: 1 } (deep copy)
+await delay(1000); // Wait 1 second
 ```
 
 **@repo/validators** - Validation functions:
@@ -85,13 +85,14 @@ import { isEmail, isUrl } from "@repo/validators/format";
 // Or import everything
 import * as validators from "@repo/validators";
 
-isEmpty("");              // true
-isInRange(5, 1, 10);     // true
-isEmail("a@b.com");      // true
+isEmpty(""); // true
+isInRange(5, 1, 10); // true
+isEmail("a@b.com"); // true
 isValidDate(new Date()); // true
 ```
 
 For full API documentation, see:
+
 - [@repo/utils README](packages/utils/README.md)
 - [@repo/validators README](packages/validators/README.md)
 

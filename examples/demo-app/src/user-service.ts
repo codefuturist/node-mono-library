@@ -6,12 +6,7 @@
 import { capitalize, truncate } from "@repo/utils/string";
 import { pick, omit } from "@repo/utils/object";
 import { delay, retry } from "@repo/utils/async";
-import {
-  isEmail,
-  isPhoneNumber,
-  isUrl,
-  isUuid,
-} from "@repo/validators/format";
+import { isEmail, isPhoneNumber, isUrl, isUuid } from "@repo/validators/format";
 import { hasMinLength, isEmpty } from "@repo/validators/string";
 import { isInRange } from "@repo/validators/number";
 import { isValidDate, isPast } from "@repo/validators/date";
@@ -97,7 +92,9 @@ class UserService {
   /**
    * Create a new user with validation and transformation
    */
-  async createUser(input: CreateUserInput): Promise<User | { errors: string[] }> {
+  async createUser(
+    input: CreateUserInput
+  ): Promise<User | { errors: string[] }> {
     const errors = this.validateUserInput(input);
 
     if (errors.length > 0) {
@@ -147,7 +144,14 @@ class UserService {
     const safeUser = omit(user, ["passwordHash", "updatedAt"]);
 
     return {
-      ...pick(safeUser, ["id", "email", "firstName", "lastName", "bio", "website"]),
+      ...pick(safeUser, [
+        "id",
+        "email",
+        "firstName",
+        "lastName",
+        "bio",
+        "website",
+      ]),
       fullName: `${user.firstName} ${user.lastName}`,
       memberSince: user.createdAt,
     };

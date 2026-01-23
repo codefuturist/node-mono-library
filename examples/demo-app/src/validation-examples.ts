@@ -196,7 +196,9 @@ interface ContactInfo {
 function validateContact(contact: ContactInfo): boolean {
   let valid = true;
 
-  console.log(`Email "${contact.email}": ${isEmail(contact.email) ? "✓" : "✗"}`);
+  console.log(
+    `Email "${contact.email}": ${isEmail(contact.email) ? "✓" : "✗"}`
+  );
   valid = valid && isEmail(contact.email);
 
   console.log(

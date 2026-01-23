@@ -18,8 +18,7 @@ console.log(`Capitalized: "${capitalize(userInput)}"`);
 console.log(`Kebab case: "${toKebabCase(userInput)}"`);
 
 // Truncate long text
-const longText =
-  "This is a very long piece of text that needs to be truncated";
+const longText = "This is a very long piece of text that needs to be truncated";
 console.log(`Truncated: "${truncate(longText, 30)}"`);
 
 console.log("\n=== Array Utils Examples ===\n");

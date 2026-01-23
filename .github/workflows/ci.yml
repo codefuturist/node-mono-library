@@ -1,86 +1,86 @@
 name: CI
 
 on:
-    push:
-        branches: [main, develop]
-    pull_request:
-        branches: [main, develop]
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
 
 env:
-    TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-    TURBO_TEAM: ${{ vars.TURBO_TEAM }}
-    CI: true
+  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+  TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+  CI: true
 
 jobs:
-    build:
-        name: Build and Test
-        runs-on: ubuntu-latest
+  build:
+    name: Build and Test
+    runs-on: ubuntu-latest
 
-        steps:
-            - name: Checkout repository
-              uses: actions/checkout@v4
-              with:
-                  fetch-depth: 0 # Required for --affected to work correctly
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Required for --affected to work correctly
 
-            - name: Setup pnpm
-              uses: pnpm/action-setup@v4
-              with:
-                  version: 9
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
 
-            - name: Setup Node.js
-              uses: actions/setup-node@v4
-              with:
-                  node-version: 20
-                  cache: "pnpm"
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
 
-            - name: Install dependencies
-              run: pnpm install --frozen-lockfile
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
-            - name: Build affected packages
-              run: pnpm turbo run build --affected
+      - name: Build affected packages
+        run: pnpm turbo run build --affected
 
-            - name: Lint affected packages
-              run: pnpm turbo run lint --affected
+      - name: Lint affected packages
+        run: pnpm turbo run lint --affected
 
-            - name: Type check affected packages
-              run: pnpm turbo run check-types --affected
+      - name: Type check affected packages
+        run: pnpm turbo run check-types --affected
 
-            - name: Test affected packages
-              run: pnpm turbo run test --affected
+      - name: Test affected packages
+        run: pnpm turbo run test --affected
 
-            - name: Upload coverage reports
-              uses: codecov/codecov-action@v4
-              if: always()
-              with:
-                  directory: ./packages/utils/coverage
-                  fail_ci_if_error: false
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v4
+        if: always()
+        with:
+          directory: ./packages/utils/coverage
+          fail_ci_if_error: false
 
-    # Optional: Run full build on main branch
-    full-build:
-        name: Full Build (main only)
-        runs-on: ubuntu-latest
-        if: github.ref == 'refs/heads/main'
+  # Optional: Run full build on main branch
+  full-build:
+    name: Full Build (main only)
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
 
-        steps:
-            - name: Checkout repository
-              uses: actions/checkout@v4
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-            - name: Setup pnpm
-              uses: pnpm/action-setup@v4
-              with:
-                  version: 9
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
 
-            - name: Setup Node.js
-              uses: actions/setup-node@v4
-              with:
-                  node-version: 20
-                  cache: "pnpm"
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
 
-            - name: Install dependencies
-              run: pnpm install --frozen-lockfile
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
-            - name: Full build
-              run: pnpm turbo run build lint check-types test
+      - name: Full build
+        run: pnpm turbo run build lint check-types test
 
-            - name: Build summary
-              run: pnpm turbo run build --summarize
+      - name: Build summary
+        run: pnpm turbo run build --summarize
