@@ -4,7 +4,7 @@
  */
 
 import { Command } from "commander";
-import { replaceInFile, type ReplaceResult } from "replace-in-file";
+import { replaceInFile } from "replace-in-file";
 import pc from "picocolors";
 
 import { logger } from "../utils/logger.js";
