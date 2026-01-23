@@ -37,6 +37,43 @@ A modern TypeScript monorepo with production-ready packages, tools, and a comple
 
 This Turborepo includes the following packages/apps:
 
+```mermaid
+graph TB
+    subgraph Apps
+        admin[admin<br/>Next.js 16 + Prisma]
+        docs[docs<br/>Documentation]
+        web[web<br/>Demo App]
+    end
+
+    subgraph Packages
+        ui[@repo/ui<br/>Components]
+        utils[@repo/utils<br/>Utilities]
+        validators[@repo/validators<br/>Validators]
+    end
+
+    subgraph Config
+        eslint[@repo/eslint-config]
+        tsconfig[@repo/typescript-config]
+        vitest[@repo/vitest-config]
+    end
+
+    admin --> ui
+    admin --> utils
+    admin --> validators
+    docs --> ui
+    web --> ui
+    web --> utils
+
+    ui --> eslint
+    ui --> tsconfig
+    utils --> eslint
+    utils --> tsconfig
+    utils --> vitest
+    validators --> eslint
+    validators --> tsconfig
+    validators --> vitest
+```
+
 ### Apps
 
 - `admin`: Modern admin dashboard with Next.js 16, NextAuth.js, Prisma, Tailwind CSS
