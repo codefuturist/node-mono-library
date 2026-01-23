@@ -43,7 +43,8 @@
         "!**/*.md",
         "!**/*.json",
         "!dist/**",
-        "$TURBO_ROOT$/packages/eslint-config/**"
+        "$TURBO_ROOT$/packages/eslint-config/**",
+        "$TURBO_ROOT$/eslint.config.mjs"
       ],
       "outputs": [],
       "cache": true,
