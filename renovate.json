@@ -15,7 +15,7 @@
   "prHourlyLimit": 5,
   "prConcurrentLimit": 10,
 
-  "schedule": ["before 9am on monday"],
+  "schedule": ["at any time"],
   "timezone": "Etc/UTC",
   "baseBranches": ["develop"],
 
