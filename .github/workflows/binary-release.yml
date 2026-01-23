@@ -106,7 +106,7 @@ jobs:
         run: |
           mkdir -p release-assets
           
-          # Move and rename binaries
+          # Move binaries to release folder
           for dir in binaries/*/; do
             for file in "$dir"*; do
               if [ -f "$file" ]; then
@@ -116,10 +116,21 @@ jobs:
             done
           done
           
-          # Generate checksums
           cd release-assets
-          sha256sum * > checksums-sha256.txt
+          
+          # Generate individual SHA256 checksum files (industry standard)
+          for file in repo-cli-*; do
+            sha256sum "$file" > "$file.sha256"
+          done
+          
+          # Generate combined checksums file (GoReleaser style)
+          sha256sum repo-cli-* > checksums-sha256.txt
+          
+          echo "=== Generated checksums ==="
           cat checksums-sha256.txt
+          echo ""
+          echo "=== Individual checksum files ==="
+          ls -la *.sha256
 
       - name: Get changelog entry
         id: changelog
@@ -157,10 +168,30 @@ jobs:
             ### Manual Download
             Download the binary for your platform below and add it to your PATH.
 
-            ### Checksums
-            Verify your download with SHA256:
+            | Platform | Binary |
+            |----------|--------|
+            | Linux x64 | `repo-cli-linux-x64` |
+            | Linux ARM64 | `repo-cli-linux-arm64` |
+            | macOS Intel | `repo-cli-macos-x64` |
+            | macOS Apple Silicon | `repo-cli-macos-arm64` |
+            | Windows x64 | `repo-cli-win-x64.exe` |
+
+            ### Verify Checksums (SHA256)
+            
+            **Option 1:** Verify single binary
             ```bash
-            sha256sum -c checksums-sha256.txt
+            # Download binary + its checksum
+            curl -LO https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/repo-cli-macos-arm64
+            curl -LO https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/repo-cli-macos-arm64.sha256
+            
+            # Verify
+            sha256sum -c repo-cli-macos-arm64.sha256
+            ```
+
+            **Option 2:** Verify using combined checksums
+            ```bash
+            curl -LO https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/checksums-sha256.txt
+            sha256sum -c checksums-sha256.txt --ignore-missing
             ```
 
             ${{ steps.changelog.outputs.changelog }}
