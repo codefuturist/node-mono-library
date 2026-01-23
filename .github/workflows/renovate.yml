@@ -26,10 +26,10 @@ on:
         default: "null"
         type: choice
         options:
-          - "null"      # Normal run - creates PRs
-          - extract     # Only extract dependencies, no PRs
-          - lookup      # Extract + lookup versions, no PRs
-          - full        # Full run simulation, no PRs
+          - "null" # Normal run - creates PRs
+          - extract # Only extract dependencies, no PRs
+          - lookup # Extract + lookup versions, no PRs
+          - full # Full run simulation, no PRs
       log-level:
         description: "Log level"
         required: false
@@ -39,20 +39,11 @@ on:
           - debug
           - info
           - warn
-      reset-cache:
-        description: "Reset repository cache"
-        required: false
-        default: false
-        type: boolean
 
 # Prevent concurrent runs
 concurrency:
   group: renovate-${{ github.repository }}
   cancel-in-progress: false
-
-env:
-  # Renovate cache directory
-  RENOVATE_CACHE_DIR: /tmp/renovate-cache
 
 jobs:
   renovate:
@@ -63,20 +54,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
-
-      # Restore cache from previous run
-      - name: Restore Renovate cache
-        if: inputs.reset-cache != true
-        uses: actions/cache@v4
-        with:
-          path: ${{ env.RENOVATE_CACHE_DIR }}
-          key: renovate-cache-${{ github.run_id }}
-          restore-keys: |
-            renovate-cache-
-
-      - name: Create cache directory
-        run: mkdir -p ${{ env.RENOVATE_CACHE_DIR }}
+        uses: actions/checkout@v6
 
       - name: Run Renovate
         uses: renovatebot/github-action@v44.2.5
@@ -94,13 +72,3 @@ jobs:
           RENOVATE_REQUIRE_CONFIG: "optional"
           # Enable repository cache for faster runs
           RENOVATE_REPOSITORY_CACHE: "enabled"
-          # Cache directory
-          RENOVATE_CACHE_DIR: ${{ env.RENOVATE_CACHE_DIR }}
-
-      # Save cache for next run
-      - name: Save Renovate cache
-        if: always()
-        uses: actions/cache/save@v4
-        with:
-          path: ${{ env.RENOVATE_CACHE_DIR }}
-          key: renovate-cache-${{ github.run_id }}
