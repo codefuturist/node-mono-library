@@ -36,3 +36,7 @@ yarn-error.log*
 # Misc
 .DS_Store
 *.pem
+packages/cli/bundled/
+packages/cli/repo-cli
+playwright-report/
+test-results/

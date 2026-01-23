@@ -18,3 +18,10 @@ export {
   runTransform,
   type TransformOptions,
 } from "./transform.js";
+export {
+  replaceCommand,
+  runReplace,
+  type ReplaceOptions,
+  type ReplaceCommandResult,
+  DEFAULT_IGNORE_PATTERNS,
+} from "./replace.js";

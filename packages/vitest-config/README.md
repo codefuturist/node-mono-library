@@ -7,8 +7,8 @@ Shared Vitest configuration for the monorepo.
 In your package's `vitest.config.ts`:
 
 ```typescript
-import { defineConfig } from 'vitest/config';
-import { sharedConfig } from '@repo/vitest-config';
+import { defineConfig } from "vitest/config";
+import { sharedConfig } from "@repo/vitest-config";
 
 export default defineConfig({
   ...sharedConfig,
@@ -37,7 +37,7 @@ export default defineConfig({
   ...sharedConfig,
   test: {
     ...sharedConfig.test,
-    environment: 'jsdom', // Override for React components
+    environment: "jsdom", // Override for React components
   },
 });
 ```

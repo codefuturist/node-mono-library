@@ -10,6 +10,12 @@ export { runInit, type InitOptions } from "./commands/init.js";
 export { runValidate, type ValidateOptions } from "./commands/validate.js";
 export { runGenerate, type GenerateOptions } from "./commands/generate.js";
 export { runTransform, type TransformOptions } from "./commands/transform.js";
+export {
+    runReplace,
+    type ReplaceOptions,
+    type ReplaceCommandResult,
+    DEFAULT_IGNORE_PATTERNS,
+} from "./commands/replace.js";
 
 // Export utilities
 export { logger } from "./utils/logger.js";

@@ -1,7 +1,7 @@
 "use client";
 
-import { useSession } from "next-auth/react";
-import { Avatar } from "@/components/ui/avatar";
+import { useSession, signOut } from "next-auth/react";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,7 +10,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { signOut } from "next-auth/react";
 
 export function Header() {
   const { data: session } = useSession();
@@ -25,9 +24,9 @@ export function Header() {
       <DropdownMenu>
         <DropdownMenuTrigger className="focus:outline-none">
           <Avatar className="h-9 w-9 cursor-pointer">
-            <div className="flex h-full w-full items-center justify-center bg-gray-200 text-sm font-medium text-gray-700">
+            <AvatarFallback className="bg-gray-200 text-sm font-medium text-gray-700">
               {session?.user?.name?.charAt(0) || "A"}
-            </div>
+            </AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">

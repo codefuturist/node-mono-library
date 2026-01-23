@@ -10,6 +10,7 @@ import { initCommand } from "./commands/init.js";
 import { validateCommand } from "./commands/validate.js";
 import { generateCommand } from "./commands/generate.js";
 import { transformCommand } from "./commands/transform.js";
+import { replaceCommand } from "./commands/replace.js";
 import { VERSION, CLI_NAME, CLI_DESCRIPTION } from "./constants.js";
 
 // Configure the main program
@@ -27,6 +28,7 @@ program.addCommand(initCommand);
 program.addCommand(validateCommand);
 program.addCommand(generateCommand);
 program.addCommand(transformCommand);
+program.addCommand(replaceCommand);
 
 // Add global options
 program.option("--no-color", "Disable colored output");
@@ -40,6 +42,7 @@ ${pc.dim("Examples:")}
   ${pc.cyan("$")} repo-cli validate data.json --schema user
   ${pc.cyan("$")} repo-cli generate component Button
   ${pc.cyan("$")} repo-cli transform input.txt --kebab
+  ${pc.cyan("$")} repo-cli replace 'old' 'new' 'src/**/*.ts' --dry
 
 ${pc.dim("Documentation:")}
   ${pc.blue("https://github.com/codefuturist/node-mono-library")}
