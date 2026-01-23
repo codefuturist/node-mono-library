@@ -62,6 +62,8 @@ jobs:
           configurationFile: renovate.json
           token: ${{ secrets.RENOVATE_TOKEN }}
         env:
+          # Repository to scan (required for self-hosted)
+          RENOVATE_REPOSITORIES: ${{ github.repository }}
           # Log level from input or default
           LOG_LEVEL: ${{ inputs.log-level || 'info' }}
           # Dry-run mode (null = normal run)
