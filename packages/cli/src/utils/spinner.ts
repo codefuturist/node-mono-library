@@ -55,7 +55,9 @@ export interface StepSpinner {
  */
 export function createSpinner(textOrOptions?: string | SpinnerOptions): Ora {
   const options: OraOptions =
-    typeof textOrOptions === "string" ? { text: textOrOptions } : textOrOptions ?? {};
+    typeof textOrOptions === "string"
+      ? { text: textOrOptions }
+      : (textOrOptions ?? {});
 
   return ora({
     color: "cyan",
@@ -81,7 +83,9 @@ export async function withSpinner<T>(
     spinner.succeed(successText);
     return result;
   } catch (error) {
-    spinner.fail(failText ?? (error instanceof Error ? error.message : "Failed"));
+    spinner.fail(
+      failText ?? (error instanceof Error ? error.message : "Failed")
+    );
     throw error;
   }
 }

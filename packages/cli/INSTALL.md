@@ -11,6 +11,7 @@ curl -fsSL https://raw.githubusercontent.com/codefuturist/node-mono-library/main
 ```
 
 This will:
+
 1. Detect your OS and architecture
 2. Download the latest binary
 3. Verify the checksum
@@ -87,10 +88,11 @@ npx @repo/cli --help
    - `repo-cli-win-x64.exe` - Windows
 
 3. Verify the checksum (optional but recommended):
+
    ```bash
    # Download checksums
    curl -fsSL https://github.com/codefuturist/node-mono-library/releases/latest/download/checksums-sha256.txt
-   
+
    # Verify (Linux/macOS)
    sha256sum -c checksums-sha256.txt --ignore-missing
    ```
@@ -136,27 +138,32 @@ repo-cli --help
 ## Uninstall
 
 ### Homebrew
+
 ```bash
 brew uninstall repo-cli
 brew untap codefuturist/tap
 ```
 
 ### Chocolatey
+
 ```powershell
 choco uninstall repo-cli
 ```
 
 ### Snap
+
 ```bash
 sudo snap remove repo-cli
 ```
 
 ### npm
+
 ```bash
 npm uninstall -g @repo/cli
 ```
 
 ### Manual
+
 ```bash
 rm ~/.local/bin/repo-cli
 # or
@@ -201,14 +208,14 @@ curl -fsSL https://raw.githubusercontent.com/codefuturist/node-mono-library/main
 
 ## Platform Support
 
-| Platform | Architecture | Status |
-|----------|-------------|--------|
-| Linux | x64 (AMD/Intel) | ✅ Supported |
-| Linux | ARM64 | ✅ Supported |
-| macOS | x64 (Intel) | ✅ Supported |
-| macOS | ARM64 (Apple Silicon) | ✅ Supported |
-| Windows | x64 | ✅ Supported |
-| Windows | ARM64 | ⚠️ Use x64 with emulation |
+| Platform | Architecture          | Status                    |
+| -------- | --------------------- | ------------------------- |
+| Linux    | x64 (AMD/Intel)       | ✅ Supported              |
+| Linux    | ARM64                 | ✅ Supported              |
+| macOS    | x64 (Intel)           | ✅ Supported              |
+| macOS    | ARM64 (Apple Silicon) | ✅ Supported              |
+| Windows  | x64                   | ✅ Supported              |
+| Windows  | ARM64                 | ⚠️ Use x64 with emulation |
 
 ---
 

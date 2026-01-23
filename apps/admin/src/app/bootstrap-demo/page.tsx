@@ -39,11 +39,7 @@ export default function BootstrapDemoPage() {
       <Container>
         {/* Alert */}
         {showAlert && (
-          <Alert
-            variant="info"
-            dismissible
-            onClose={() => setShowAlert(false)}
-          >
+          <Alert variant="info" dismissible onClose={() => setShowAlert(false)}>
             <Alert.Heading>Welcome to the Bootstrap Demo!</Alert.Heading>
             <p className="mb-0">
               This page uses Bootstrap 5 styling isolated from the rest of the
@@ -57,9 +53,9 @@ export default function BootstrapDemoPage() {
           <Container fluid className="py-5">
             <h1 className="display-5 fw-bold">Bootstrap 5 Demo Page</h1>
             <p className="col-md-8 fs-4">
-              This page demonstrates using Bootstrap components within a
-              Next.js app that primarily uses Tailwind CSS. The Bootstrap
-              styles are scoped to this route only.
+              This page demonstrates using Bootstrap components within a Next.js
+              app that primarily uses Tailwind CSS. The Bootstrap styles are
+              scoped to this route only.
             </p>
             <Button variant="primary" size="lg">
               Learn More
@@ -99,7 +95,10 @@ export default function BootstrapDemoPage() {
             <Card>
               <Card.Body>
                 <Card.Title>
-                  Warning Card <Badge bg="warning" text="dark">Attention</Badge>
+                  Warning Card{" "}
+                  <Badge bg="warning" text="dark">
+                    Attention
+                  </Badge>
                 </Card.Title>
                 <Card.Text>
                   This card uses warning colors to draw attention.
@@ -192,7 +191,9 @@ export default function BootstrapDemoPage() {
                   <td>Thornton</td>
                   <td>@fat</td>
                   <td>
-                    <Badge bg="warning" text="dark">Pending</Badge>
+                    <Badge bg="warning" text="dark">
+                      Pending
+                    </Badge>
                   </td>
                 </tr>
                 <tr>

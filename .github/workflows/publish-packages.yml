@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version to publish (e.g., 1.0.0)'
+        description: "Version to publish (e.g., 1.0.0)"
         required: true
         type: string
   repository_dispatch:
@@ -57,13 +57,13 @@ jobs:
         run: |
           VERSION="${{ steps.version.outputs.version }}"
           SHA256="${{ steps.checksum.outputs.sha256 }}"
-          
+
           mkdir -p choco/tools
-          
+
           # Process nuspec template
           sed -e "s/{{VERSION}}/$VERSION/g" \
             scripts/packaging/chocolatey/repo-cli.nuspec.template > choco/repo-cli.nuspec
-          
+
           # Process install script template
           sed -e "s/{{VERSION}}/$VERSION/g" \
               -e "s/{{SHA256_WIN_X64}}/$SHA256/g" \
@@ -103,7 +103,7 @@ jobs:
       - name: Prepare snapcraft.yaml
         run: |
           VERSION="${{ steps.version.outputs.version }}"
-          
+
           mkdir -p snap
           sed -e "s/{{VERSION}}/$VERSION/g" \
             scripts/packaging/snap/snapcraft.yaml.template > snap/snapcraft.yaml
@@ -143,7 +143,7 @@ jobs:
         run: |
           VERSION="${{ steps.version.outputs.version }}"
           CHECKSUMS=$(curl -fsSL "https://github.com/${{ github.repository }}/releases/download/@repo%2Fcli@${VERSION}/checksums-sha256.txt")
-          
+
           echo "macos_x64=$(echo "$CHECKSUMS" | grep "macos-x64" | awk '{print $1}')" >> $GITHUB_OUTPUT
           echo "macos_arm64=$(echo "$CHECKSUMS" | grep "macos-arm64" | awk '{print $1}')" >> $GITHUB_OUTPUT
           echo "linux_x64=$(echo "$CHECKSUMS" | grep "linux-x64" | awk '{print $1}')" >> $GITHUB_OUTPUT
@@ -152,14 +152,14 @@ jobs:
       - name: Generate Homebrew formula
         run: |
           VERSION="${{ steps.version.outputs.version }}"
-          
+
           sed -e "s/{{VERSION}}/$VERSION/g" \
               -e "s/{{SHA256_MACOS_X64}}/${{ steps.checksums.outputs.macos_x64 }}/g" \
               -e "s/{{SHA256_MACOS_ARM64}}/${{ steps.checksums.outputs.macos_arm64 }}/g" \
               -e "s/{{SHA256_LINUX_X64}}/${{ steps.checksums.outputs.linux_x64 }}/g" \
               -e "s/{{SHA256_LINUX_ARM64}}/${{ steps.checksums.outputs.linux_arm64 }}/g" \
             scripts/packaging/homebrew/repo-cli.rb.template > repo-cli.rb
-          
+
           cat repo-cli.rb
 
       - name: Push to Homebrew tap
@@ -167,9 +167,9 @@ jobs:
         env:
           API_TOKEN_GITHUB: ${{ secrets.HOMEBREW_TAP_TOKEN }}
         with:
-          source_file: 'repo-cli.rb'
-          destination_repo: '${{ github.repository_owner }}/homebrew-tap'
-          destination_folder: 'Formula'
-          user_email: 'github-actions[bot]@users.noreply.github.com'
-          user_name: 'github-actions[bot]'
-          commit_message: 'Update repo-cli to ${{ steps.version.outputs.version }}'
+          source_file: "repo-cli.rb"
+          destination_repo: "${{ github.repository_owner }}/homebrew-tap"
+          destination_folder: "Formula"
+          user_email: "github-actions[bot]@users.noreply.github.com"
+          user_name: "github-actions[bot]"
+          commit_message: "Update repo-cli to ${{ steps.version.outputs.version }}"

@@ -67,13 +67,20 @@ export interface Logger {
 const createLogger = (): Logger => {
   return {
     // Standard log levels - delegate to consola
-    info: (message: string, ...args: unknown[]) => consola.info(message, ...args),
-    success: (message: string, ...args: unknown[]) => consola.success(message, ...args),
-    warn: (message: string, ...args: unknown[]) => consola.warn(message, ...args),
-    error: (message: string, ...args: unknown[]) => consola.error(message, ...args),
-    debug: (message: string, ...args: unknown[]) => consola.debug(message, ...args),
-    verbose: (message: string, ...args: unknown[]) => consola.verbose(message, ...args),
-    fatal: (message: string, ...args: unknown[]) => consola.fatal(message, ...args),
+    info: (message: string, ...args: unknown[]) =>
+      consola.info(message, ...args),
+    success: (message: string, ...args: unknown[]) =>
+      consola.success(message, ...args),
+    warn: (message: string, ...args: unknown[]) =>
+      consola.warn(message, ...args),
+    error: (message: string, ...args: unknown[]) =>
+      consola.error(message, ...args),
+    debug: (message: string, ...args: unknown[]) =>
+      consola.debug(message, ...args),
+    verbose: (message: string, ...args: unknown[]) =>
+      consola.verbose(message, ...args),
+    fatal: (message: string, ...args: unknown[]) =>
+      consola.fatal(message, ...args),
 
     // CLI-specific helpers
     dim: (message: string) => {

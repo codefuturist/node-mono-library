@@ -37,14 +37,14 @@ test.describe("Dashboard Navigation", () => {
 
   test("should logout successfully", async ({ page }) => {
     // Click on avatar/dropdown to reveal logout option
-    await page.click('[data-slot="card"]').catch(() => { });
+    await page.click('[data-slot="card"]').catch(() => {});
     const logoutButton = page.locator("text=/sign out|logout/i");
     if (await logoutButton.isVisible()) {
       await logoutButton.click();
       await expect(page).toHaveURL(/login/);
     } else {
       // Logout might be in a dropdown menu
-      await page.click('button:has-text("A")').catch(() => { });
+      await page.click('button:has-text("A")').catch(() => {});
       await page.click("text=/sign out|logout/i");
       await expect(page).toHaveURL(/login/);
     }
@@ -79,4 +79,3 @@ test.describe("Dashboard Features", () => {
     await expect(page.locator("text=/dashboard/i").first()).toBeVisible();
   });
 });
-

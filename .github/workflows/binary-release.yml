@@ -51,6 +51,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Build workspace packages
+        run: pnpm build --filter=@repo/utils --filter=@repo/validators
+
       - name: Bundle CLI (esbuild)
         run: |
           cd packages/cli
@@ -95,7 +98,7 @@ jobs:
       - name: Prepare release assets
         run: |
           mkdir -p release-assets
-          
+
           # Move binaries to release folder
           for dir in binaries/*/; do
             for file in "$dir"*; do
@@ -105,17 +108,17 @@ jobs:
               fi
             done
           done
-          
+
           cd release-assets
-          
+
           # Generate combined checksums file first (GoReleaser style - binaries only)
           sha256sum repo-cli-* > checksums-sha256.txt
-          
+
           # Generate individual SHA256 checksum files (industry standard)
           for file in repo-cli-*; do
             sha256sum "$file" > "$file.sha256"
           done
-          
+
           echo "=== Generated checksums ==="
           cat checksums-sha256.txt
           echo ""
@@ -128,7 +131,7 @@ jobs:
           # Extract changelog for this version from CHANGELOG.md
           VERSION="${{ steps.version.outputs.version }}"
           CHANGELOG_FILE="packages/cli/CHANGELOG.md"
-          
+
           if [ -f "$CHANGELOG_FILE" ]; then
             # Extract content between version headers
             ENTRY=$(awk "/^## $VERSION/,/^## [0-9]/" "$CHANGELOG_FILE" | head -n -1)
@@ -167,13 +170,13 @@ jobs:
             | Windows x64 | `repo-cli-win-x64.exe` |
 
             ### Verify Checksums (SHA256)
-            
+
             **Option 1:** Verify single binary
             ```bash
             # Download binary + its checksum
             curl -LO https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/repo-cli-macos-arm64
             curl -LO https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/repo-cli-macos-arm64.sha256
-            
+
             # Verify
             sha256sum -c repo-cli-macos-arm64.sha256
             ```
@@ -193,7 +196,7 @@ jobs:
     name: Update Homebrew Formula
     needs: create-release
     runs-on: ubuntu-latest
-    if: ${{ !contains(github.ref_name, '-') }}  # Skip for prereleases
+    if: ${{ !contains(github.ref_name, '-') }} # Skip for prereleases
 
     steps:
       - name: Extract version
