@@ -13,6 +13,9 @@
     "clean": "turbo run clean && rm -rf node_modules/.cache .turbo",
     "build:affected": "turbo run build --affected",
     "ci": "turbo run build lint check-types test --affected",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "turbo run build lint check-types test && changeset version && changeset publish",
     "flow:feature:start": "read -p 'Feature name: ' name && git flow feature start \"$name\"",
     "flow:feature:finish": "git flow feature finish",
     "flow:feature:publish": "git flow feature publish",
@@ -25,6 +28,7 @@
     "flow:status": "git branch -a && echo '\\n--- Current branch ---' && git branch --show-current"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.29.8",
     "eslint-config-prettier": "^10.1.8",
     "prettier": "^3.8.1",
     "turbo": "^2.7.5",

@@ -19,6 +19,8 @@ This Turborepo includes the following packages/apps:
 - `docs`: a [Next.js](https://nextjs.org/) app
 - `web`: another [Next.js](https://nextjs.org/) app
 - `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
+- `@repo/utils`: a utility library with string, array, object, and async helpers (publishable)
+- `@repo/validators`: a validation library with type-safe validators for strings, numbers, dates, and formats (publishable)
 - `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
 - `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
 
@@ -123,6 +125,27 @@ yarn exec turbo link
 pnpm exec turbo link
 ```
 
+## Versioning and Publishing
+
+This monorepo uses [Changesets](https://github.com/changesets/changesets) for version management and publishing to npm.
+
+### Quick Commands
+
+```bash
+pnpm changeset              # Create a changeset after making changes
+pnpm version-packages       # Bump versions based on changesets
+pnpm release                # Build, test, and publish to npm
+```
+
+### Workflow
+
+1. Make changes to `@repo/utils` or `@repo/validators`
+2. Create a changeset: `pnpm changeset`
+3. Commit the changeset with your changes
+4. When ready to release: `pnpm version-packages` and `pnpm release`
+
+For detailed documentation, see [docs/VERSIONING.md](docs/VERSIONING.md).
+
 ## Useful Links
 
 Learn more about the power of Turborepo:
@@ -132,4 +155,5 @@ Learn more about the power of Turborepo:
 - [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching)
 - [Filtering](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters)
 - [Configuration Options](https://turborepo.dev/docs/reference/configuration)
+- [Publishing Packages](https://turborepo.dev/docs/guides/publishing-libraries)
 - [CLI Usage](https://turborepo.dev/docs/reference/command-line-reference)
