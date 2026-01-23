@@ -118,13 +118,13 @@ jobs:
           
           cd release-assets
           
+          # Generate combined checksums file first (GoReleaser style - binaries only)
+          sha256sum repo-cli-* > checksums-sha256.txt
+          
           # Generate individual SHA256 checksum files (industry standard)
           for file in repo-cli-*; do
             sha256sum "$file" > "$file.sha256"
           done
-          
-          # Generate combined checksums file (GoReleaser style)
-          sha256sum repo-cli-* > checksums-sha256.txt
           
           echo "=== Generated checksums ==="
           cat checksums-sha256.txt

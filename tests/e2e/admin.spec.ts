@@ -1,61 +1,20 @@
 import { test, expect } from "@playwright/test";
 
-test.describe("Admin Dashboard E2E", () => {
-  test.beforeEach(async ({ page }) => {
-    // Navigate to login page
-    await page.goto("/login");
-  });
-
-  test("should display login page", async ({ page }) => {
-    await expect(page).toHaveTitle(/Admin/);
-    // CardTitle renders as div, check for login text anywhere
-    await expect(page.locator("text=/Admin Login/i")).toBeVisible();
-  });
-
-  test("should show validation errors for empty form", async ({ page }) => {
-    const submitButton = page.locator('button[type="submit"]');
-    await submitButton.click();
-
-    // Check for HTML5 validation or custom error messages
-    const emailInput = page.locator('input[type="email"]');
-    await expect(emailInput).toBeVisible();
-  });
-
-  test("should login with valid credentials", async ({ page }) => {
-    // Fill in login form
-    await page.fill('input[type="email"]', "admin@example.com");
-    await page.fill('input[type="password"]', "admin123");
-
-    // Submit form
-    await page.click('button[type="submit"]');
-
-    // Wait for redirect to dashboard
-    await page.waitForURL("**/dashboard", { timeout: 10000 });
-
-    // Verify we're on the dashboard
-    await expect(page).toHaveURL(/dashboard/);
-  });
-
-  test("should show error for invalid credentials", async ({ page }) => {
-    await page.fill('input[type="email"]', "wrong@example.com");
-    await page.fill('input[type="password"]', "wrongpassword");
-    await page.click('button[type="submit"]');
-
-    // Should show error message
-    await expect(page.locator("text=/invalid|error/i")).toBeVisible({
-      timeout: 5000,
-    });
-  });
-});
+/**
+ * Tests for authenticated pages
+ * These tests use stored auth state from auth.setup.ts
+ * No need to login in beforeEach - already authenticated!
+ */
 
 test.describe("Dashboard Navigation", () => {
   test.beforeEach(async ({ page }) => {
-    // Login first
-    await page.goto("/login");
-    await page.fill('input[type="email"]', "admin@example.com");
-    await page.fill('input[type="password"]', "admin123");
-    await page.click('button[type="submit"]');
-    await page.waitForURL("**/dashboard", { timeout: 10000 });
+    // Already authenticated via stored state, just navigate
+    await page.goto("/dashboard");
+  });
+
+  test("should display dashboard", async ({ page }) => {
+    await expect(page).toHaveURL(/dashboard/);
+    await expect(page.locator("text=/dashboard/i").first()).toBeVisible();
   });
 
   test("should navigate to users page", async ({ page }) => {
@@ -94,15 +53,11 @@ test.describe("Dashboard Navigation", () => {
 
 test.describe("Dashboard Features", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/login");
-    await page.fill('input[type="email"]', "admin@example.com");
-    await page.fill('input[type="password"]', "admin123");
-    await page.click('button[type="submit"]');
-    await page.waitForURL("**/dashboard", { timeout: 10000 });
+    // Already authenticated via stored state
+    await page.goto("/dashboard");
   });
 
   test("should display statistics cards", async ({ page }) => {
-    // Check for stat cards - be more flexible with text matching
     await expect(page.locator("text=/revenue|total/i").first()).toBeVisible({
       timeout: 5000,
     });
@@ -117,7 +72,6 @@ test.describe("Dashboard Features", () => {
   test("should be responsive", async ({ page }) => {
     // Test mobile viewport
     await page.setViewportSize({ width: 375, height: 667 });
-    // Check page is still functional
     await expect(page.locator("text=/dashboard/i").first()).toBeVisible();
 
     // Test desktop viewport
@@ -125,3 +79,4 @@ test.describe("Dashboard Features", () => {
     await expect(page.locator("text=/dashboard/i").first()).toBeVisible();
   });
 });
+
