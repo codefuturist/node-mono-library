@@ -46,6 +46,7 @@
     "git:rebase:develop": "git fetch origin develop && git rebase origin/develop",
     "git:pull": "git pull --rebase",
     "git:sync": "git fetch --all --prune",
+    "git:release": "git checkout main && git merge develop && git checkout develop",
     "pkg:add": "pnpm add",
     "pkg:add:dev": "pnpm add -D",
     "pkg:add:root": "pnpm add -D -w",

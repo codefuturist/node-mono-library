@@ -1,71 +1,71 @@
 {
-    "name": "@repo/utils",
-    "version": "0.1.0",
-    "description": "Shared utility functions for the monorepo",
-    "license": "MIT",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/codefuturist/node-mono-library.git",
-        "directory": "packages/utils"
+  "name": "@repo/utils",
+  "version": "0.1.1",
+  "description": "Shared utility functions for the monorepo",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/codefuturist/node-mono-library.git",
+    "directory": "packages/utils"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     },
-    "publishConfig": {
-        "access": "public"
+    "./string": {
+      "types": "./dist/string.d.ts",
+      "import": "./dist/string.js",
+      "require": "./dist/string.cjs"
     },
-    "type": "module",
-    "main": "./dist/index.cjs",
-    "module": "./dist/index.js",
-    "types": "./dist/index.d.ts",
-    "exports": {
-        ".": {
-            "types": "./dist/index.d.ts",
-            "import": "./dist/index.js",
-            "require": "./dist/index.cjs"
-        },
-        "./string": {
-            "types": "./dist/string.d.ts",
-            "import": "./dist/string.js",
-            "require": "./dist/string.cjs"
-        },
-        "./array": {
-            "types": "./dist/array.d.ts",
-            "import": "./dist/array.js",
-            "require": "./dist/array.cjs"
-        },
-        "./object": {
-            "types": "./dist/object.d.ts",
-            "import": "./dist/object.js",
-            "require": "./dist/object.cjs"
-        },
-        "./async": {
-            "types": "./dist/async.d.ts",
-            "import": "./dist/async.js",
-            "require": "./dist/async.cjs"
-        }
+    "./array": {
+      "types": "./dist/array.d.ts",
+      "import": "./dist/array.js",
+      "require": "./dist/array.cjs"
     },
-    "files": [
-        "dist"
-    ],
-    "scripts": {
-        "build": "tsup",
-        "dev": "tsup --watch",
-        "test": "vitest run",
-        "test:watch": "vitest",
-        "test:coverage": "vitest run --coverage",
-        "lint": "eslint . --max-warnings 0",
-        "format": "prettier --write \"src/**/*.ts\" \"__tests__/**/*.ts\"",
-        "format:check": "prettier --check \"src/**/*.ts\" \"__tests__/**/*.ts\"",
-        "check-types": "tsc --noEmit",
-        "clean": "rm -rf dist coverage .turbo"
+    "./object": {
+      "types": "./dist/object.d.ts",
+      "import": "./dist/object.js",
+      "require": "./dist/object.cjs"
     },
-    "devDependencies": {
-        "@repo/eslint-config": "workspace:*",
-        "@repo/typescript-config": "workspace:*",
-        "@vitest/coverage-v8": "^4.0.18",
-        "eslint": "^9.39.2",
-        "eslint-config-prettier": "^10.1.8",
-        "prettier": "^3.4.2",
-        "tsup": "^8.5.1",
-        "typescript": "^5.9.3",
-        "vitest": "^4.0.18"
+    "./async": {
+      "types": "./dist/async.d.ts",
+      "import": "./dist/async.js",
+      "require": "./dist/async.cjs"
     }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint . --max-warnings 0",
+    "format": "prettier --write \"src/**/*.ts\" \"__tests__/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.ts\" \"__tests__/**/*.ts\"",
+    "check-types": "tsc --noEmit",
+    "clean": "rm -rf dist coverage .turbo"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@vitest/coverage-v8": "^4.0.18",
+    "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.4.2",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18"
+  }
 }
