@@ -1,0 +1,25 @@
+$ErrorActionPreference = 'Stop'
+
+$packageName = 'repo-cli'
+$toolsDir = "$(Split-Path -parent $MyInvocation.MyCommand.Definition)"
+$url64 = 'https://github.com/codefuturist/node-mono-library/releases/download/@repo%2Fcli@{{VERSION}}/repo-cli-win-x64.exe'
+$checksum64 = '{{SHA256_WIN_X64}}'
+
+$packageArgs = @{
+  packageName    = $packageName
+  fileType       = 'exe'
+  url64bit       = $url64
+  checksum64     = $checksum64
+  checksumType64 = 'sha256'
+  destination    = $toolsDir
+}
+
+# Download the exe
+$exePath = Join-Path $toolsDir "repo-cli.exe"
+Get-ChocolateyWebFile @packageArgs -FileFullPath $exePath
+
+# Create shim
+Install-BinFile -Name 'repo-cli' -Path $exePath
+
+Write-Host "$packageName v{{VERSION}} installed successfully!"
+Write-Host "Run 'repo-cli --help' to get started."

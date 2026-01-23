@@ -127,6 +127,7 @@ pnpm test:all
 Each package that needs tests should:
 
 1. **Add dependencies** to `package.json`:
+
 ```json
 {
   "devDependencies": {
@@ -138,6 +139,7 @@ Each package that needs tests should:
 ```
 
 2. **Create `vitest.config.ts`** extending shared config:
+
 ```typescript
 import { defineConfig } from "vitest/config";
 import { sharedConfig } from "@repo/vitest-config";
@@ -147,13 +149,14 @@ export default defineConfig({
   test: {
     ...sharedConfig.test,
     // Package-specific overrides (optional)
-    environment: 'jsdom', // For React components
+    environment: "jsdom", // For React components
     include: ["__tests__/**/*.test.ts"],
   },
 });
 ```
 
 3. **Add test scripts** to `package.json`:
+
 ```json
 {
   "scripts": {
@@ -527,7 +530,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 25
           cache: "pnpm"
 
       - name: Install dependencies

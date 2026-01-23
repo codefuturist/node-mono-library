@@ -1,0 +1,231 @@
+name: Binary Release
+
+on:
+  push:
+    tags:
+      - "@repo/cli@*"
+
+permissions:
+  contents: write
+
+env:
+  CLI_NAME: repo-cli
+
+jobs:
+  build-binaries:
+    name: Build ${{ matrix.target }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: linux-x64
+            pkg_target: node25-linux-x64
+          - os: ubuntu-latest
+            target: linux-arm64
+            pkg_target: node25-linux-arm64
+          - os: macos-latest
+            target: macos-x64
+            pkg_target: node25-macos-x64
+          - os: macos-latest
+            target: macos-arm64
+            pkg_target: node25-macos-arm64
+          - os: windows-latest
+            target: win-x64
+            pkg_target: node25-win-x64
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 25
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build CLI package
+        run: pnpm build --filter=@repo/cli
+
+      - name: Bundle CLI (ncc)
+        run: |
+          cd packages/cli
+          npx ncc build dist/cli.js -o bundled
+        shell: bash
+
+      - name: Add shebang (Unix)
+        if: runner.os != 'Windows'
+        run: |
+          cd packages/cli/bundled
+          echo '#!/usr/bin/env node' | cat - index.js > temp && mv temp index.js
+        shell: bash
+
+      - name: Build binary (pkg)
+        run: |
+          cd packages/cli
+          npx pkg bundled/index.js -t ${{ matrix.pkg_target }} -o ${{ env.CLI_NAME }}-${{ matrix.target }}
+        shell: bash
+
+      - name: Rename Windows binary
+        if: runner.os == 'Windows'
+        run: |
+          cd packages/cli
+          mv ${{ env.CLI_NAME }}-${{ matrix.target }} ${{ env.CLI_NAME }}-${{ matrix.target }}.exe
+        shell: bash
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.CLI_NAME }}-${{ matrix.target }}
+          path: packages/cli/${{ env.CLI_NAME }}-${{ matrix.target }}${{ runner.os == 'Windows' && '.exe' || '' }}
+          retention-days: 1
+
+  create-release:
+    name: Create GitHub Release
+    needs: build-binaries
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Extract version from tag
+        id: version
+        run: |
+          # Tag format: @repo/cli@1.0.0 → extract 1.0.0
+          VERSION="${GITHUB_REF_NAME#@repo/cli@}"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Extracted version: $VERSION"
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: binaries
+
+      - name: Prepare release assets
+        run: |
+          mkdir -p release-assets
+          
+          # Move and rename binaries
+          for dir in binaries/*/; do
+            for file in "$dir"*; do
+              if [ -f "$file" ]; then
+                filename=$(basename "$file")
+                cp "$file" "release-assets/$filename"
+              fi
+            done
+          done
+          
+          # Generate checksums
+          cd release-assets
+          sha256sum * > checksums-sha256.txt
+          cat checksums-sha256.txt
+
+      - name: Get changelog entry
+        id: changelog
+        run: |
+          # Extract changelog for this version from CHANGELOG.md
+          VERSION="${{ steps.version.outputs.version }}"
+          CHANGELOG_FILE="packages/cli/CHANGELOG.md"
+          
+          if [ -f "$CHANGELOG_FILE" ]; then
+            # Extract content between version headers
+            ENTRY=$(awk "/^## $VERSION/,/^## [0-9]/" "$CHANGELOG_FILE" | head -n -1)
+            if [ -n "$ENTRY" ]; then
+              echo "changelog<<EOF" >> $GITHUB_OUTPUT
+              echo "$ENTRY" >> $GITHUB_OUTPUT
+              echo "EOF" >> $GITHUB_OUTPUT
+            fi
+          fi
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "CLI v${{ steps.version.outputs.version }}"
+          tag_name: ${{ github.ref_name }}
+          draft: false
+          prerelease: ${{ contains(steps.version.outputs.version, '-') }}
+          generate_release_notes: true
+          body: |
+            ## Installation
+
+            ### Quick Install (Unix)
+            ```bash
+            curl -fsSL https://raw.githubusercontent.com/${{ github.repository }}/main/scripts/install.sh | bash
+            ```
+
+            ### Manual Download
+            Download the binary for your platform below and add it to your PATH.
+
+            ### Checksums
+            Verify your download with SHA256:
+            ```bash
+            sha256sum -c checksums-sha256.txt
+            ```
+
+            ${{ steps.changelog.outputs.changelog }}
+
+          files: |
+            release-assets/*
+
+  update-homebrew:
+    name: Update Homebrew Formula
+    needs: create-release
+    runs-on: ubuntu-latest
+    if: ${{ !contains(github.ref_name, '-') }}  # Skip for prereleases
+
+    steps:
+      - name: Extract version
+        id: version
+        run: |
+          VERSION="${GITHUB_REF_NAME#@repo/cli@}"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Trigger Homebrew tap update
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+          repository: ${{ github.repository_owner }}/homebrew-tap
+          event-type: update-formula
+          client-payload: |
+            {
+              "formula": "repo-cli",
+              "version": "${{ steps.version.outputs.version }}",
+              "repo": "${{ github.repository }}"
+            }
+
+  publish-packages:
+    name: Publish to Package Managers
+    needs: create-release
+    runs-on: ubuntu-latest
+    if: ${{ !contains(github.ref_name, '-') }}
+
+    steps:
+      - name: Extract version
+        id: version
+        run: |
+          VERSION="${GITHUB_REF_NAME#@repo/cli@}"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Trigger package manager publishing
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          event-type: publish-packages
+          client-payload: |
+            {
+              "version": "${{ steps.version.outputs.version }}",
+              "homebrew": true,
+              "chocolatey": true,
+              "snap": true
+            }

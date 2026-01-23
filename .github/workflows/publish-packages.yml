@@ -1,0 +1,175 @@
+name: Publish to Package Managers
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to publish (e.g., 1.0.0)'
+        required: true
+        type: string
+  repository_dispatch:
+    types: [publish-packages]
+
+permissions:
+  contents: write
+
+env:
+  CLI_NAME: repo-cli
+
+jobs:
+  publish-chocolatey:
+    name: Publish to Chocolatey
+    runs-on: windows-latest
+    if: github.event_name == 'workflow_dispatch' || github.event.client_payload.chocolatey
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Get version
+        id: version
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "version=${{ inputs.version }}" >> $GITHUB_OUTPUT
+          else
+            echo "version=${{ github.event.client_payload.version }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Download binary
+        shell: bash
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          curl -fsSL "https://github.com/${{ github.repository }}/releases/download/@repo%2Fcli@${VERSION}/repo-cli-win-x64.exe" \
+            -o repo-cli.exe
+
+      - name: Get checksum
+        id: checksum
+        shell: bash
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          CHECKSUMS=$(curl -fsSL "https://github.com/${{ github.repository }}/releases/download/@repo%2Fcli@${VERSION}/checksums-sha256.txt")
+          SHA256=$(echo "$CHECKSUMS" | grep "win-x64" | awk '{print $1}')
+          echo "sha256=$SHA256" >> $GITHUB_OUTPUT
+
+      - name: Prepare Chocolatey package
+        shell: bash
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          SHA256="${{ steps.checksum.outputs.sha256 }}"
+          
+          mkdir -p choco/tools
+          
+          # Process nuspec template
+          sed -e "s/{{VERSION}}/$VERSION/g" \
+            scripts/packaging/chocolatey/repo-cli.nuspec.template > choco/repo-cli.nuspec
+          
+          # Process install script template
+          sed -e "s/{{VERSION}}/$VERSION/g" \
+              -e "s/{{SHA256_WIN_X64}}/$SHA256/g" \
+            scripts/packaging/chocolatey/chocolateyinstall.ps1.template > choco/tools/chocolateyinstall.ps1
+
+      - name: Build and push Chocolatey package
+        shell: powershell
+        env:
+          CHOCOLATEY_API_KEY: ${{ secrets.CHOCOLATEY_API_KEY }}
+        run: |
+          cd choco
+          choco pack
+          choco push repo-cli.${{ steps.version.outputs.version }}.nupkg --source https://push.chocolatey.org/ --api-key $env:CHOCOLATEY_API_KEY
+
+  publish-snap:
+    name: Publish to Snapcraft
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' || github.event.client_payload.snap
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Get version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "version=${{ inputs.version }}" >> $GITHUB_OUTPUT
+          else
+            echo "version=${{ github.event.client_payload.version }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Setup Snapcraft
+        uses: snapcore/action-build@v1
+        id: snapcraft
+
+      - name: Prepare snapcraft.yaml
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          
+          mkdir -p snap
+          sed -e "s/{{VERSION}}/$VERSION/g" \
+            scripts/packaging/snap/snapcraft.yaml.template > snap/snapcraft.yaml
+
+      - name: Build snap
+        uses: snapcore/action-build@v1
+        id: build
+
+      - name: Publish to Snap Store
+        uses: snapcore/action-publish@v1
+        env:
+          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_TOKEN }}
+        with:
+          snap: ${{ steps.build.outputs.snap }}
+          release: stable
+
+  update-homebrew:
+    name: Update Homebrew Formula
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' || github.event.client_payload.homebrew
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Get version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "version=${{ inputs.version }}" >> $GITHUB_OUTPUT
+          else
+            echo "version=${{ github.event.client_payload.version }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Download checksums
+        id: checksums
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          CHECKSUMS=$(curl -fsSL "https://github.com/${{ github.repository }}/releases/download/@repo%2Fcli@${VERSION}/checksums-sha256.txt")
+          
+          echo "macos_x64=$(echo "$CHECKSUMS" | grep "macos-x64" | awk '{print $1}')" >> $GITHUB_OUTPUT
+          echo "macos_arm64=$(echo "$CHECKSUMS" | grep "macos-arm64" | awk '{print $1}')" >> $GITHUB_OUTPUT
+          echo "linux_x64=$(echo "$CHECKSUMS" | grep "linux-x64" | awk '{print $1}')" >> $GITHUB_OUTPUT
+          echo "linux_arm64=$(echo "$CHECKSUMS" | grep "linux-arm64" | awk '{print $1}')" >> $GITHUB_OUTPUT
+
+      - name: Generate Homebrew formula
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          
+          sed -e "s/{{VERSION}}/$VERSION/g" \
+              -e "s/{{SHA256_MACOS_X64}}/${{ steps.checksums.outputs.macos_x64 }}/g" \
+              -e "s/{{SHA256_MACOS_ARM64}}/${{ steps.checksums.outputs.macos_arm64 }}/g" \
+              -e "s/{{SHA256_LINUX_X64}}/${{ steps.checksums.outputs.linux_x64 }}/g" \
+              -e "s/{{SHA256_LINUX_ARM64}}/${{ steps.checksums.outputs.linux_arm64 }}/g" \
+            scripts/packaging/homebrew/repo-cli.rb.template > repo-cli.rb
+          
+          cat repo-cli.rb
+
+      - name: Push to Homebrew tap
+        uses: dmnemec/copy_file_to_another_repo_action@main
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+        with:
+          source_file: 'repo-cli.rb'
+          destination_repo: '${{ github.repository_owner }}/homebrew-tap'
+          destination_folder: 'Formula'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          user_name: 'github-actions[bot]'
+          commit_message: 'Update repo-cli to ${{ steps.version.outputs.version }}'

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <id>repo-cli</id>
+    <version>{{VERSION}}</version>
+    <title>repo-cli</title>
+    <authors>codefuturist</authors>
+    <owners>codefuturist</owners>
+    <projectUrl>https://github.com/codefuturist/node-mono-library</projectUrl>
+    <licenseUrl>https://github.com/codefuturist/node-mono-library/blob/main/LICENSE</licenseUrl>
+    <iconUrl>https://raw.githubusercontent.com/codefuturist/node-mono-library/main/docs/assets/icon.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Command-line interface for @repo utilities. Transform strings, validate data, generate code, and initialize projects.</description>
+    <summary>A powerful CLI tool for monorepo utilities</summary>
+    <releaseNotes>See https://github.com/codefuturist/node-mono-library/releases</releaseNotes>
+    <tags>cli nodejs typescript utilities validation</tags>
+    <packageSourceUrl>https://github.com/codefuturist/node-mono-library</packageSourceUrl>
+    <docsUrl>https://github.com/codefuturist/node-mono-library/tree/main/packages/cli</docsUrl>
+    <bugTrackerUrl>https://github.com/codefuturist/node-mono-library/issues</bugTrackerUrl>
+  </metadata>
+  <files>
+    <file src="tools\**" target="tools" />
+  </files>
+</package>

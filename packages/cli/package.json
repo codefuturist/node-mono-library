@@ -29,6 +29,9 @@
   ],
   "scripts": {
     "build": "tsup",
+    "build:bundle": "pnpm build && ncc build dist/cli.js -o bundled && sed -i '' '1s|^|#!/usr/bin/env node\\n|' bundled/index.js && sed -i '' '2d' bundled/index.js",
+    "build:binary": "pnpm build:bundle && pkg bundled/index.js -t node25-macos-x64,node25-linux-x64,node25-win-x64 -o bin/repo-cli",
+    "install:local": "pnpm build:bundle && cp bundled/index.js ~/.local/bin/repo-cli && chmod +x ~/.local/bin/repo-cli",
     "dev": "tsup --watch",
     "start": "node dist/cli.js",
     "test": "vitest run",
@@ -47,19 +50,26 @@
     "@repo/utils": "workspace:*",
     "@repo/validators": "workspace:*",
     "commander": "^14.0.2",
-    "picocolors": "^1.1.1"
+    "picocolors": "^1.1.1",
+    "replace-in-file": "^8.4.0"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@repo/vitest-config": "workspace:*",
     "@types/node": "^25.0.10",
+    "@vercel/ncc": "^0.38.4",
     "@vitest/coverage-v8": "^4.0.18",
+    "@yao-pkg/pkg": "^6.12.0",
+    "esbuild": "^0.27.2",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "prettier": "^3.8.1",
     "tsup": "^8.5.1",
     "typescript": "^5.9.3",
     "vitest": "^4.0.18"
+  },
+  "engines": {
+    "node": ">=25"
   }
 }

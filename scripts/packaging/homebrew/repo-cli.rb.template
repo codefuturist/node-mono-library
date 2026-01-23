@@ -1,0 +1,42 @@
+# Homebrew Formula for repo-cli
+# To use: brew tap codefuturist/tap && brew install repo-cli
+
+class RepoCli < Formula
+  desc "Command-line interface for @repo utilities"
+  homepage "https://github.com/codefuturist/node-mono-library"
+  version "{{VERSION}}"
+  license "MIT"
+
+  on_macos do
+    if Hardware::CPU.arm?
+      url "https://github.com/codefuturist/node-mono-library/releases/download/@repo%2Fcli@{{VERSION}}/repo-cli-macos-arm64"
+      sha256 "{{SHA256_MACOS_ARM64}}"
+    else
+      url "https://github.com/codefuturist/node-mono-library/releases/download/@repo%2Fcli@{{VERSION}}/repo-cli-macos-x64"
+      sha256 "{{SHA256_MACOS_X64}}"
+    end
+  end
+
+  on_linux do
+    if Hardware::CPU.arm?
+      url "https://github.com/codefuturist/node-mono-library/releases/download/@repo%2Fcli@{{VERSION}}/repo-cli-linux-arm64"
+      sha256 "{{SHA256_LINUX_ARM64}}"
+    else
+      url "https://github.com/codefuturist/node-mono-library/releases/download/@repo%2Fcli@{{VERSION}}/repo-cli-linux-x64"
+      sha256 "{{SHA256_LINUX_X64}}"
+    end
+  end
+
+  def install
+    binary_name = "repo-cli"
+    
+    # The downloaded file is the binary itself
+    downloaded_file = Dir["*"].first || cached_download.basename
+    
+    bin.install downloaded_file => binary_name
+  end
+
+  test do
+    assert_match version.to_s, shell_output("#{bin}/repo-cli --version")
+  end
+end

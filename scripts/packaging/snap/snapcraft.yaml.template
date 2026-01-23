@@ -1,0 +1,38 @@
+name: repo-cli
+base: core22
+version: '{{VERSION}}'
+summary: Command-line interface for @repo utilities
+description: |
+  A powerful CLI tool demonstrating @repo/utils and @repo/validators.
+  
+  Features:
+  - Initialize projects, configs, and components
+  - Validate JSON data against schemas
+  - Generate boilerplate code
+  - Transform strings (kebab-case, camelCase, etc.)
+
+grade: stable
+confinement: strict
+
+architectures:
+  - build-on: amd64
+  - build-on: arm64
+
+apps:
+  repo-cli:
+    command: bin/repo-cli
+    plugs:
+      - home
+      - network
+      - removable-media
+
+parts:
+  repo-cli:
+    plugin: dump
+    source: https://github.com/codefuturist/node-mono-library/releases/download/@repo%2Fcli@{{VERSION}}/repo-cli-linux-$CRAFT_ARCH_BUILD_FOR
+    source-type: file
+    
+    override-build: |
+      mkdir -p $CRAFT_PART_INSTALL/bin
+      cp $CRAFT_PART_SRC/* $CRAFT_PART_INSTALL/bin/repo-cli
+      chmod +x $CRAFT_PART_INSTALL/bin/repo-cli

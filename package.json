@@ -87,6 +87,7 @@
     "pkg:remove": "pnpm remove",
     "pkg:list": "pnpm list --depth=0",
     "pkg:list:all": "pnpm list --recursive --depth=0",
+    "pkg:list:projects": "pnpm list -r --depth -1",
     "pkg:why": "pnpm why",
     "pkg:audit": "pnpm audit",
     "pkg:audit:fix": "pnpm audit --fix",
@@ -97,6 +98,8 @@
     "pkg:store:prune": "pnpm store prune",
     "pkg:store:status": "pnpm store status",
     "cli:build": "pnpm build --filter=@repo/cli",
+    "cli:bundle": "pnpm --filter=@repo/cli build:bundle",
+    "cli:install:local": "pnpm --filter=@repo/cli install:local",
     "cli:install": "pnpm build --filter=@repo/cli && cd packages/cli && pnpm link --global",
     "cli:uninstall": "cd packages/cli && pnpm unlink --global",
     "cli:reinstall": "pnpm cli:uninstall && pnpm cli:install",
@@ -105,6 +108,11 @@
     "cli:start": "pnpm --filter=@repo/cli start",
     "cli:dev": "pnpm --filter=@repo/cli dev",
     "cli:watch": "cd packages/cli && pnpm link --global && pnpm dev",
+    "replace": "pnpm cli:exec replace",
+    "replace:dry": "pnpm cli:exec replace --dry --verbose",
+    "replace:help": "pnpm cli:exec replace --help",
+    "r": "pnpm replace",
+    "rd": "pnpm replace:dry",
     "dlx": "pnpm dlx",
     "dlx:tsc": "pnpm dlx typescript --version",
     "dlx:create-next": "pnpm dlx create-next-app@latest",
@@ -132,7 +140,9 @@
     "c": "pnpm commit",
     "ch": "pnpm commit:help",
     "ct": "pnpm check-types",
-    "prepare": "husky"
+    "prepare": "husky",
+    "ia": "ntl",
+    "up": "pnpm update --recursive --latest --dev --prod --optional"
   },
   "devDependencies": {
     "@changesets/cli": "^2.29.8",
@@ -241,6 +251,6 @@
   },
   "packageManager": "pnpm@10.28.1",
   "engines": {
-    "node": ">=18"
+    "node": ">=25"
   }
 }
