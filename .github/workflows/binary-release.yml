@@ -70,14 +70,7 @@ jobs:
       - name: Build binary (pkg)
         run: |
           cd packages/cli
-          npx pkg bundled/index.js -t ${{ matrix.pkg_target }} -o ${{ env.CLI_NAME }}-${{ matrix.target }}
-        shell: bash
-
-      - name: Rename Windows binary
-        if: runner.os == 'Windows'
-        run: |
-          cd packages/cli
-          mv ${{ env.CLI_NAME }}-${{ matrix.target }} ${{ env.CLI_NAME }}-${{ matrix.target }}.exe
+          npx pkg bundled/index.js -t ${{ matrix.pkg_target }} -o ${{ env.CLI_NAME }}-${{ matrix.target }}${{ runner.os == 'Windows' && '.exe' || '' }}
         shell: bash
 
       - name: Upload artifact
