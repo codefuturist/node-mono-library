@@ -1,0 +1,130 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Renovate configuration for node-mono-library (pnpm + Turborepo monorepo)",
+  "extends": [
+    "config:recommended",
+    ":semanticCommits",
+    ":separateMajorReleases",
+    "group:allNonMajor",
+    ":rebaseStalePrs"
+  ],
+
+  "branchPrefix": "renovate/",
+  "labels": ["dependencies", "automated", "renovate"],
+
+  "prHourlyLimit": 5,
+  "prConcurrentLimit": 10,
+
+  "schedule": ["before 9am on monday"],
+  "timezone": "Etc/UTC",
+  "baseBranches": ["develop"],
+
+  "enabledManagers": ["npm", "github-actions"],
+
+  "dependencyDashboard": true,
+  "dependencyDashboardTitle": "🤖 Renovate Dependency Dashboard",
+  "dependencyDashboardLabels": ["dependencies", "dashboard"],
+  "dependencyDashboardOSVVulnerabilitySummary": "all",
+
+  "postUpdateOptions": ["pnpmDedupe"],
+
+  "minimumReleaseAge": "3 days",
+  "internalChecksFilter": "strict",
+
+  "packageRules": [
+    {
+      "description": "Group all GitHub Actions updates",
+      "matchManagers": ["github-actions"],
+      "groupName": "GitHub Actions",
+      "labels": ["ci", "dependencies", "automated"],
+      "automerge": true,
+      "automergeType": "pr",
+      "commitMessagePrefix": "ci(deps):",
+      "minimumReleaseAge": "1 day"
+    },
+    {
+      "description": "Group minor/patch npm updates",
+      "matchManagers": ["npm"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "npm minor/patch updates",
+      "labels": ["dependencies", "automated"],
+      "automerge": true,
+      "automergeType": "pr",
+      "commitMessagePrefix": "chore(deps):"
+    },
+    {
+      "description": "Major npm updates - no auto-merge, individual PRs",
+      "matchManagers": ["npm"],
+      "matchUpdateTypes": ["major"],
+      "automerge": false,
+      "groupName": null,
+      "labels": ["dependencies", "automated", "breaking"],
+      "commitMessagePrefix": "chore(deps):",
+      "minimumReleaseAge": "7 days"
+    },
+    {
+      "description": "Group TypeScript ecosystem updates",
+      "matchPackageNames": ["/^typescript/", "/^@types//"],
+      "groupName": "TypeScript ecosystem"
+    },
+    {
+      "description": "Group ESLint ecosystem updates",
+      "matchPackageNames": ["/^eslint/", "/^@eslint//"],
+      "groupName": "ESLint ecosystem"
+    },
+    {
+      "description": "Group Vitest ecosystem updates",
+      "matchPackageNames": ["/^vitest/", "/^@vitest//"],
+      "groupName": "Vitest ecosystem"
+    },
+    {
+      "description": "Group Next.js ecosystem updates",
+      "matchPackageNames": ["/^next/", "/^@next//"],
+      "groupName": "Next.js ecosystem"
+    },
+    {
+      "description": "Group Prisma updates",
+      "matchPackageNames": ["/^prisma/", "/^@prisma//"],
+      "groupName": "Prisma"
+    },
+    {
+      "description": "Group Playwright updates",
+      "matchPackageNames": ["/^playwright/", "/^@playwright//"],
+      "groupName": "Playwright"
+    },
+    {
+      "description": "Group Turborepo updates",
+      "matchPackageNames": ["/^turbo/"],
+      "groupName": "Turborepo"
+    },
+    {
+      "description": "Group pnpm updates",
+      "matchPackageNames": ["/^pnpm/"],
+      "groupName": "pnpm"
+    },
+    {
+      "description": "Workspace packages - apps/*",
+      "matchFileNames": ["apps/**"],
+      "additionalBranchPrefix": "apps/"
+    },
+    {
+      "description": "Workspace packages - packages/*",
+      "matchFileNames": ["packages/**"],
+      "additionalBranchPrefix": "packages/"
+    }
+  ],
+
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "labels": ["security", "dependencies", "urgent"],
+    "automerge": true,
+    "minimumReleaseAge": "0 days"
+  },
+
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["before 5am on the first day of the month"],
+    "commitMessageAction": "update",
+    "commitMessagePrefix": "chore(deps):"
+  }
+}

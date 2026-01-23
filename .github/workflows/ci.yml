@@ -80,3 +80,25 @@ jobs:
 
       - name: Build summary
         run: pnpm turbo run build --summarize
+
+  # Validate dependency update configs when they change
+  validate-deps-config:
+    name: Validate Dependency Configs
+    runs-on: ubuntu-latest
+    if: |
+      contains(github.event.head_commit.modified, 'renovate.json') ||
+      contains(github.event.head_commit.modified, 'dependabot.yml') ||
+      github.event_name == 'pull_request'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate Renovate config
+        run: |
+          docker run --rm -v $(pwd):/usr/src/app:ro \
+            renovate/renovate:latest renovate-config-validator
+
+      - name: Validate Dependabot config
+        run: |
+          python3 -c "import yaml; yaml.safe_load(open('.github/dependabot.yml')); print('✅ Dependabot config valid')"

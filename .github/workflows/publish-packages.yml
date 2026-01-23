@@ -163,7 +163,7 @@ jobs:
           cat repo-cli.rb
 
       - name: Push to Homebrew tap
-        uses: dmnemec/copy_file_to_another_repo_action@main
+        uses: dmnemec/copy_file_to_another_repo_action@v1.1.1
         env:
           API_TOKEN_GITHUB: ${{ secrets.HOMEBREW_TAP_TOKEN }}
         with:
