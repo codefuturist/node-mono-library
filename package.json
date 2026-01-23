@@ -142,7 +142,8 @@
     "ct": "pnpm check-types",
     "prepare": "husky",
     "ia": "ntl",
-    "up": "pnpm update --recursive --latest --dev --prod --optional"
+    "up": "pnpm update --recursive --latest --dev --prod --optional",
+    "postinstall": "playwright install chromium --with-deps || echo 'Playwright browser installation skipped'"
   },
   "devDependencies": {
     "@changesets/cli": "^2.29.8",

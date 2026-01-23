@@ -51,20 +51,10 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build CLI package
-        run: pnpm build --filter=@repo/cli
-
-      - name: Bundle CLI (ncc)
+      - name: Bundle CLI (esbuild)
         run: |
           cd packages/cli
-          npx ncc build dist/cli.js -o bundled
-        shell: bash
-
-      - name: Add shebang (Unix)
-        if: runner.os != 'Windows'
-        run: |
-          cd packages/cli/bundled
-          echo '#!/usr/bin/env node' | cat - index.js > temp && mv temp index.js
+          npx esbuild src/cli.ts --bundle --platform=node --target=node20 --format=cjs --outfile=bundled/index.js --packages=bundle
         shell: bash
 
       - name: Build binary (pkg)

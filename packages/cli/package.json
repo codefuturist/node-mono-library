@@ -29,8 +29,8 @@
   ],
   "scripts": {
     "build": "tsup",
-    "build:bundle": "pnpm build && ncc build dist/cli.js -o bundled && sed -i '' '1s|^|#!/usr/bin/env node\\n|' bundled/index.js && sed -i '' '2d' bundled/index.js",
-    "build:binary": "pnpm build:bundle && pkg bundled/index.js -t node25-macos-x64,node25-linux-x64,node25-win-x64 -o bin/repo-cli",
+    "build:bundle": "npx esbuild src/cli.ts --bundle --platform=node --target=node20 --format=cjs --outfile=bundled/index.js --packages=bundle",
+    "build:binary": "pnpm build:bundle && pkg bundled/index.js -t node20-macos-x64,node20-linux-x64,node20-win-x64 -o bin/repo-cli",
     "install:local": "pnpm build:bundle && cp bundled/index.js ~/.local/bin/repo-cli && chmod +x ~/.local/bin/repo-cli",
     "dev": "tsup --watch",
     "start": "node dist/cli.js",
@@ -47,17 +47,24 @@
     "clean": "rm -rf dist coverage .turbo"
   },
   "dependencies": {
+    "@inquirer/prompts": "^8.2.0",
     "@repo/utils": "workspace:*",
     "@repo/validators": "workspace:*",
     "commander": "^14.0.2",
+    "conf": "^15.0.2",
+    "consola": "^3.4.2",
+    "execa": "^9.6.1",
+    "ora": "^9.1.0",
     "picocolors": "^1.1.1",
-    "replace-in-file": "^8.4.0"
+    "replace-in-file": "^8.4.0",
+    "update-notifier": "^7.3.1"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@repo/vitest-config": "workspace:*",
     "@types/node": "^25.0.10",
+    "@types/update-notifier": "^6.0.8",
     "@vercel/ncc": "^0.38.4",
     "@vitest/coverage-v8": "^4.0.18",
     "@yao-pkg/pkg": "^6.12.0",
@@ -71,5 +78,10 @@
   },
   "engines": {
     "node": ">=25"
+  },
+  "pkg": {
+    "scripts": "bundled/**/*.js",
+    "assets": "bundled/**/*",
+    "outputPath": "bin"
   }
 }

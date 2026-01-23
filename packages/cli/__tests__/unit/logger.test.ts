@@ -1,10 +1,13 @@
 /**
  * Tests for logger utility
+ *
+ * Note: consola writes to process.stdout/stderr directly, not console.log/error.
+ * We mock the underlying consola instance for log-level methods.
  */
 
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 
-import { logger } from "../../src/utils/logger.js";
+import { logger, consola } from "../../src/utils/logger.js";
 import {
   mockConsole,
   stripAnsi,
@@ -16,19 +19,24 @@ describe("logger", () => {
 
   beforeEach(() => {
     consoleMock = mockConsole();
+    // Mock consola methods (it uses its own output, not console.log)
+    vi.spyOn(consola, "info").mockImplementation(() => {});
+    vi.spyOn(consola, "success").mockImplementation(() => {});
+    vi.spyOn(consola, "warn").mockImplementation(() => {});
+    vi.spyOn(consola, "error").mockImplementation(() => {});
+    vi.spyOn(consola, "box").mockImplementation(() => {});
   });
 
   afterEach(() => {
     consoleMock.restore();
+    vi.restoreAllMocks();
   });
 
   describe("info", () => {
     it("should log info messages", () => {
       logger.info("Test message");
 
-      expect(consoleMock.log).toHaveBeenCalled();
-      const output = stripAnsi(consoleMock.getOutput().join(""));
-      expect(output).toContain("Test message");
+      expect(consola.info).toHaveBeenCalledWith("Test message");
     });
   });
 
@@ -36,9 +44,7 @@ describe("logger", () => {
     it("should log success messages", () => {
       logger.success("Operation completed");
 
-      expect(consoleMock.log).toHaveBeenCalled();
-      const output = stripAnsi(consoleMock.getOutput().join(""));
-      expect(output).toContain("Operation completed");
+      expect(consola.success).toHaveBeenCalledWith("Operation completed");
     });
   });
 
@@ -46,19 +52,15 @@ describe("logger", () => {
     it("should log warning messages", () => {
       logger.warn("Warning message");
 
-      expect(consoleMock.log).toHaveBeenCalled();
-      const output = stripAnsi(consoleMock.getOutput().join(""));
-      expect(output).toContain("Warning message");
+      expect(consola.warn).toHaveBeenCalledWith("Warning message");
     });
   });
 
   describe("error", () => {
-    it("should log error messages to stderr", () => {
+    it("should log error messages", () => {
       logger.error("Error message");
 
-      expect(consoleMock.error).toHaveBeenCalled();
-      const output = stripAnsi(consoleMock.getErrors().join(""));
-      expect(output).toContain("Error message");
+      expect(consola.error).toHaveBeenCalledWith("Error message");
     });
   });
 
@@ -99,7 +101,10 @@ describe("logger", () => {
     it("should create a box around text", () => {
       logger.box("Title", "Boxed content");
 
-      expect(consoleMock.log).toHaveBeenCalled();
+      expect(consola.box).toHaveBeenCalledWith({
+        title: "Title",
+        message: "Boxed content",
+      });
     });
   });
 
@@ -108,6 +113,15 @@ describe("logger", () => {
       logger.dim("Dimmed text");
 
       expect(consoleMock.log).toHaveBeenCalled();
+    });
+  });
+
+  describe("setLevel", () => {
+    it("should change log level", () => {
+      logger.setLevel("debug");
+      expect(logger.getLevel()).toBe(4); // debug level
+      logger.setLevel("info");
+      expect(logger.getLevel()).toBe(3); // info level
     });
   });
 });
