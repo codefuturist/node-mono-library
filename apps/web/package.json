@@ -8,10 +8,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint --max-warnings 0",
-    "check-types": "next typegen && tsc --noEmit"
+    "check-types": "next typegen && tsc --noEmit",
+    "clean": "rm -rf .next .turbo"
   },
   "dependencies": {
     "@repo/ui": "workspace:*",
+    "@repo/utils": "workspace:*",
     "next": "16.1.4",
     "react": "^19.2.3",
     "react-dom": "^19.2.3"

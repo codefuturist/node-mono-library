@@ -1,21 +1,116 @@
 {
   "$schema": "https://turborepo.dev/schema.json",
   "ui": "tui",
+  "globalDependencies": [
+    ".env",
+    "tsconfig.json"
+  ],
+  "globalEnv": [
+    "NODE_ENV",
+    "CI"
+  ],
+  "globalPassThroughEnv": [
+    "npm_lifecycle_event",
+    "TURBO_TEAM",
+    "TURBO_TOKEN"
+  ],
   "tasks": {
     "build": {
-      "dependsOn": ["^build"],
-      "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": [".next/**", "!.next/cache/**"]
+      "dependsOn": [
+        "^build"
+      ],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        ".env*",
+        "!README.md",
+        "!**/*.test.ts"
+      ],
+      "outputs": [
+        ".next/**",
+        "!.next/cache/**",
+        "dist/**"
+      ],
+      "env": [
+        "VERCEL_URL",
+        "NEXT_PUBLIC_*"
+      ],
+      "outputLogs": "new-only"
     },
     "lint": {
-      "dependsOn": ["^lint"]
+      "dependsOn": [],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!**/*.md",
+        "!**/*.json",
+        "!dist/**",
+        "$TURBO_ROOT$/packages/eslint-config/**"
+      ],
+      "outputs": [],
+      "cache": true,
+      "outputLogs": "errors-only"
     },
     "check-types": {
-      "dependsOn": ["^check-types"]
+      "dependsOn": [
+        "^check-types"
+      ],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!**/*.md",
+        "$TURBO_ROOT$/packages/typescript-config/**"
+      ],
+      "outputs": [],
+      "cache": true
+    },
+    "test": {
+      "dependsOn": [
+        "^build"
+      ],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "**/*.test.ts",
+        "**/*.test.tsx",
+        "**/*.spec.ts"
+      ],
+      "outputs": [
+        "coverage/**"
+      ],
+      "env": [
+        "CI",
+        "NODE_ENV"
+      ],
+      "cache": true
+    },
+    "test:watch": {
+      "cache": false,
+      "persistent": true,
+      "interactive": true
+    },
+    "test:coverage": {
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        "coverage/**"
+      ],
+      "cache": true
     },
     "dev": {
+      "dependsOn": [
+        "^build"
+      ],
+      "cache": false,
+      "persistent": true,
+      "interactive": true
+    },
+    "start": {
+      "dependsOn": [
+        "build"
+      ],
       "cache": false,
       "persistent": true
+    },
+    "clean": {
+      "cache": false
     }
   }
 }
