@@ -8,11 +8,19 @@
     "test": "turbo run test",
     "test:watch": "turbo run test:watch",
     "test:coverage": "turbo run test:coverage",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,mjs,cjs,json,yaml,yml,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,mjs,cjs,json,yaml,yml,md}\"",
+    "lint:fix": "turbo run lint -- --fix",
+    "hooks:install": "husky",
+    "hooks:pre-commit": "lint-staged",
+    "hooks:commit-msg": "commitlint --edit",
+    "hooks:test": "pnpm hooks:pre-commit && echo 'feat: test commit' | pnpm commitlint",
+    "hooks:skip": "echo 'Use: git commit --no-verify' && echo 'Or: HUSKY=0 git commit'",
     "check-types": "turbo run check-types",
     "clean": "turbo run clean && rm -rf node_modules/.cache .turbo",
     "build:affected": "turbo run build --affected",
     "ci": "turbo run build lint check-types test --affected",
+    "ci:full": "pnpm format:check && turbo run build lint check-types test",
     "upgrade": "pnpm update --latest --recursive",
     "upgrade:interactive": "pnpm update --latest --recursive --interactive",
     "upgrade:check": "pnpm outdated --recursive",
@@ -28,14 +36,98 @@
     "flow:hotfix:start": "read -p 'Hotfix version: ' ver && git flow hotfix start \"$ver\"",
     "flow:hotfix:finish": "read -p 'Hotfix version: ' ver && git flow hotfix finish \"$ver\"",
     "flow:init": "git flow init -d",
-    "flow:status": "git branch -a && echo '\\n--- Current branch ---' && git branch --show-current"
+    "flow:status": "git branch -a && echo '\\n--- Current branch ---' && git branch --show-current",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@changesets/cli": "^2.29.8",
+    "@commitlint/cli": "^20.3.1",
+    "@commitlint/config-conventional": "^20.3.1",
     "eslint-config-prettier": "^10.1.8",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
     "prettier": "^3.8.1",
     "turbo": "^2.7.5",
     "typescript": "5.9.3"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx,mjs,cjs}": [
+      "eslint --fix --max-warnings=0",
+      "prettier --write"
+    ],
+    "*.{json,yaml,yml}": [
+      "prettier --write"
+    ],
+    "*.md": [
+      "prettier --write"
+    ]
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ],
+    "rules": {
+      "type-enum": [
+        2,
+        "always",
+        [
+          "feat",
+          "fix",
+          "docs",
+          "style",
+          "refactor",
+          "perf",
+          "test",
+          "build",
+          "ci",
+          "chore",
+          "revert"
+        ]
+      ],
+      "type-case": [
+        2,
+        "always",
+        "lower-case"
+      ],
+      "type-empty": [
+        2,
+        "never"
+      ],
+      "subject-empty": [
+        2,
+        "never"
+      ],
+      "subject-full-stop": [
+        2,
+        "never",
+        "."
+      ],
+      "subject-max-length": [
+        2,
+        "always",
+        100
+      ],
+      "header-max-length": [
+        2,
+        "always",
+        120
+      ],
+      "body-max-line-length": [
+        2,
+        "always",
+        200
+      ]
+    }
+  },
+  "prettier": {
+    "semi": true,
+    "trailingComma": "es5",
+    "singleQuote": false,
+    "printWidth": 80,
+    "tabWidth": 2,
+    "useTabs": false,
+    "arrowParens": "always",
+    "endOfLine": "lf"
   },
   "packageManager": "pnpm@9.0.0",
   "engines": {
