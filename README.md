@@ -1,53 +1,48 @@
-# Turborepo starter
+# Node Mono Library
 
-This Turborepo starter is maintained by the Turborepo core team.
+A modern TypeScript monorepo with production-ready packages, tools, and a complete admin dashboard.
 
-## Using this example
+## 🚀 Features
 
-Run the following command:
-
-```sh
-pnpm dlx create-turbo@latest
-```
-
-or
-
-```sh
-npx create-turbo@latest
-```
+- ✅ **TypeScript Strict Mode** - Full type safety
+- ✅ **Turborepo** - High-performance build system
+- ✅ **Modern Testing** - Vitest + Playwright
+- ✅ **Code Quality** - ESLint, Prettier, Husky
+- ✅ **Conventional Commits** - Commitizen + Commitlint
+- ✅ **Changesets** - Version management
+- ✅ **Git Flow** - Branch management scripts
+- ✅ **Admin Dashboard** - Next.js 16 + Prisma + Auth
 
 ## What's inside?
 
 This Turborepo includes the following packages/apps:
 
-### Apps and Packages
+### Apps
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/utils`: a utility library with string, array, object, and async helpers (publishable)
-- `@repo/validators`: a validation library with type-safe validators for strings, numbers, dates, and formats (publishable)
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+- `admin`: Modern admin dashboard with Next.js 16, NextAuth.js, Prisma, Tailwind CSS
+- `docs`: Documentation site (Next.js)
+- `web`: Demo web app (Next.js)
+
+### Packages
+
+- `@repo/ui`: React component library (shadcn/ui)
+- `@repo/utils`: Utility functions (string, array, object, async helpers) - **publishable**
+- `@repo/validators`: Type-safe validators (email, dates, numbers, formats) - **publishable**
+- `@repo/eslint-config`: Shared ESLint configurations
+- `@repo/typescript-config`: Shared TypeScript configurations
 
 Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 
-## Using the Libraries
+## 📦 Using the Libraries
 
-The `@repo/utils` and `@repo/validators` packages are publishable libraries that can be used in external projects.
+The `@repo/utils` and `@repo/validators` packages are publishable libraries.
 
 ### Installation (from npm)
 
 After the packages are published to npm:
 
 ```bash
-# Install @repo/utils
-npm install @repo/utils
-# or
-pnpm add @repo/utils
-
-# Install @repo/validators
-npm install @repo/validators
+pnpm add @repo/utils @repo/validators
 # or
 pnpm add @repo/validators
 ```
@@ -215,6 +210,40 @@ pnpm release                # Build, test, and publish to npm
 4. When ready to release: `pnpm version-packages` and `pnpm release`
 
 For detailed documentation, see [docs/VERSIONING.md](docs/VERSIONING.md).
+
+## 🧪 Testing
+
+This monorepo has a comprehensive testing setup with **Vitest** for unit/integration tests and **Playwright** for E2E tests.
+
+### Run Tests
+
+```bash
+# Unit & Integration tests
+pnpm test                   # Run all tests
+pnpm test:watch             # Watch mode
+pnpm test:ui                # Run with Vitest UI
+pnpm test:coverage          # Generate coverage report
+
+# E2E tests
+pnpm test:e2e               # Run E2E tests
+pnpm test:e2e:ui            # Run with Playwright UI
+pnpm test:e2e:debug         # Debug mode
+
+# Run all tests
+pnpm test:all               # Unit + E2E
+```
+
+### Test Structure
+
+```
+packages/
+  ├── utils/__tests__/
+  └── validators/__tests__/
+tests/
+  └── e2e/                  # E2E tests for apps
+```
+
+For detailed testing documentation, see [docs/TESTING.md](docs/TESTING.md).
 
 ## Useful Links
 

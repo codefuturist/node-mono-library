@@ -1,15 +1,10 @@
 import { defineConfig } from "vitest/config";
+import { sharedConfig } from "@repo/vitest-config";
 
 export default defineConfig({
+  ...sharedConfig,
   test: {
-    globals: true,
-    environment: "node",
+    ...sharedConfig.test,
     include: ["__tests__/**/*.test.ts"],
-    coverage: {
-      provider: "v8",
-      reporter: ["text", "json", "html"],
-      include: ["src/**/*.ts"],
-      exclude: ["src/**/*.d.ts"],
-    },
   },
 });
