@@ -111,4 +111,6 @@ const packages = getProjects("packages", "package");
 const markdown = generateMarkdown(apps, packages);
 writeFileSync(join(ROOT, "PROJECTS.md"), markdown);
 
-console.log(`✅ Generated PROJECTS.md with ${apps.length} apps and ${packages.length} packages`);
+console.log(
+  `✅ Generated PROJECTS.md with ${apps.length} apps and ${packages.length} packages`
+);

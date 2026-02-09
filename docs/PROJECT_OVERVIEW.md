@@ -230,14 +230,14 @@ pnpm release         # Full release flow
 
 ## 📚 Documentation Index
 
-| Document                                 | Description           |
-| ---------------------------------------- | --------------------- |
-| [README.md](../README.md)                | Project introduction  |
-| [CONTRIBUTING.md](../CONTRIBUTING.md)    | Contribution guide    |
-| [TESTING.md](TESTING.md)                 | Testing strategies    |
-| [VERSIONING.md](VERSIONING.md)           | Version management    |
-| [ADDING-PROJECTS.md](ADDING-PROJECTS.md) | Creating new packages |
-| [RELEASE_SECRETS.md](RELEASE_SECRETS.md) | CI/CD secrets setup   |
+| Document                                      | Description           |
+| --------------------------------------------- | --------------------- |
+| [README.md](../README.md)                     | Project introduction  |
+| [CONTRIBUTING.md](../.github/CONTRIBUTING.md) | Contribution guide    |
+| [TESTING.md](TESTING.md)                      | Testing strategies    |
+| [VERSIONING.md](VERSIONING.md)                | Version management    |
+| [ADDING-PROJECTS.md](ADDING-PROJECTS.md)      | Creating new packages |
+| [RELEASE_SECRETS.md](RELEASE_SECRETS.md)      | CI/CD secrets setup   |
 
 ## 🔍 Package Details
 

@@ -60,8 +60,8 @@ export default libraryConfig(["src/index.ts"], {
 
 ## Presets Overview
 
-| Preset           | Format      | DTS | Shebang | Use Case              |
-| ---------------- | ----------- | --- | ------- | --------------------- |
-| `libraryConfig`  | ESM + CJS   | ✅  | ❌      | Publishable packages  |
-| `cliConfig`      | ESM         | ✅  | ✅      | CLI tools             |
-| `internalConfig` | ESM         | ❌  | ❌      | Workspace-only        |
+| Preset           | Format    | DTS | Shebang | Use Case             |
+| ---------------- | --------- | --- | ------- | -------------------- |
+| `libraryConfig`  | ESM + CJS | ✅  | ❌      | Publishable packages |
+| `cliConfig`      | ESM       | ✅  | ✅      | CLI tools            |
+| `internalConfig` | ESM       | ❌  | ❌      | Workspace-only       |

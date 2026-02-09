@@ -69,7 +69,12 @@ let currentLevel = getInitialLevel();
 // Format args for output
 const formatArgs = (args: unknown[]): string => {
   if (args.length === 0) return "";
-  return " " + args.map((a) => (typeof a === "object" ? JSON.stringify(a) : String(a))).join(" ");
+  return (
+    " " +
+    args
+      .map((a) => (typeof a === "object" ? JSON.stringify(a) : String(a)))
+      .join(" ")
+  );
 };
 
 const createLogger = (): Logger => {
@@ -87,7 +92,9 @@ const createLogger = (): Logger => {
     },
     warn: (message: string, ...args: unknown[]) => {
       if (currentLevel >= LogLevels.warn) {
-        console.warn(`${pc.yellow("⚠")} ${pc.yellow(message)}${formatArgs(args)}`);
+        console.warn(
+          `${pc.yellow("⚠")} ${pc.yellow(message)}${formatArgs(args)}`
+        );
       }
     },
     error: (message: string, ...args: unknown[]) => {
@@ -106,7 +113,9 @@ const createLogger = (): Logger => {
       }
     },
     fatal: (message: string, ...args: unknown[]) => {
-      console.error(`${pc.bgRed(pc.white(" FATAL "))} ${pc.red(message)}${formatArgs(args)}`);
+      console.error(
+        `${pc.bgRed(pc.white(" FATAL "))} ${pc.red(message)}${formatArgs(args)}`
+      );
       process.exit(1);
     },
 
@@ -128,7 +137,9 @@ const createLogger = (): Logger => {
         const top = `╭${"─".repeat(width)}╮`;
         const bottom = `╰${"─".repeat(width)}╯`;
         const titleLine = `│ ${pc.bold(title)}${" ".repeat(width - title.length - 2)} │`;
-        const contentLines = lines.map((l) => `│ ${l}${" ".repeat(width - l.length - 2)} │`);
+        const contentLines = lines.map(
+          (l) => `│ ${l}${" ".repeat(width - l.length - 2)} │`
+        );
         console.log(pc.cyan(top));
         console.log(pc.cyan(titleLine));
         console.log(pc.cyan(`│${" ".repeat(width)}│`));

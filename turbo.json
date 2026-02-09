@@ -44,7 +44,11 @@
       "cache": true
     },
     "test": {
-      "dependsOn": ["transit", "@repo/vitest-config#build", "@repo/tsup-config#build"],
+      "dependsOn": [
+        "transit",
+        "@repo/vitest-config#build",
+        "@repo/tsup-config#build"
+      ],
       "inputs": [
         "$TURBO_DEFAULT$",
         "**/__tests__/**",
@@ -68,7 +72,11 @@
       "outputLogs": "full"
     },
     "test:coverage": {
-      "dependsOn": ["transit", "@repo/vitest-config#build", "@repo/tsup-config#build"],
+      "dependsOn": [
+        "transit",
+        "@repo/vitest-config#build",
+        "@repo/tsup-config#build"
+      ],
       "inputs": [
         "$TURBO_DEFAULT$",
         "**/__tests__/**",
