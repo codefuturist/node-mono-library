@@ -16,6 +16,6 @@ catalog:
   "@vitest/coverage-v8": "^4.0.18"
 
   # Linting & Formatting
-  eslint: "^9.39.3"
+  eslint: "^9.39.4"
   prettier: "^3.8.1"
   eslint-config-prettier: "^10.1.8"
