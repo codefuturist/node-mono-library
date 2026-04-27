@@ -12,8 +12,8 @@ catalog:
   tsup: "^8.5.1"
 
   # Testing
-  vitest: "^4.1.4"
-  "@vitest/coverage-v8": "^4.1.4"
+  vitest: "^4.1.5"
+  "@vitest/coverage-v8": "^4.1.5"
 
   # Linting & Formatting
   eslint: "^9.39.4"
