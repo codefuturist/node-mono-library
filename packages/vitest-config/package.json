@@ -18,11 +18,11 @@
     "clean": "rm -rf dist .turbo"
   },
   "dependencies": {
-    "vitest": "^4.1.4"
+    "vitest": "^4.1.5"
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
-    "@vitest/coverage-v8": "^4.1.4",
+    "@vitest/coverage-v8": "^4.1.5",
     "typescript": "^5.9.3"
   }
 }

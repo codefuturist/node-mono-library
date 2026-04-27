@@ -66,7 +66,7 @@
     "@types/update-notifier": "^6.0.8",
     "@vercel/ncc": "^0.38.4",
     "@vitest/coverage-v8": "catalog:",
-    "@yao-pkg/pkg": "^6.17.0",
+    "@yao-pkg/pkg": "^6.19.0",
     "esbuild": "^0.28.0",
     "eslint": "catalog:",
     "eslint-config-prettier": "catalog:",
