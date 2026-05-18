@@ -257,11 +257,11 @@
     "@commitlint/config-conventional": "^20.5.3",
     "@eslint/compat": "^2.1.0",
     "@eslint/js": "^9.39.4",
-    "@playwright/test": "^1.59.1",
+    "@playwright/test": "^1.60.0",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
-    "@vitest/coverage-v8": "^4.1.5",
-    "@vitest/ui": "^4.1.5",
+    "@vitest/coverage-v8": "^4.1.6",
+    "@vitest/ui": "^4.1.6",
     "eslint": "^9.39.4",
     "eslint-config-airbnb-extended": "^3.1.0",
     "eslint-config-prettier": "^10.1.8",
@@ -271,11 +271,11 @@
     "lint-staged": "^16.4.0",
     "npm-check-updates": "^19.6.6",
     "ntl": "^5.1.0",
-    "playwright": "^1.59.1",
+    "playwright": "^1.60.0",
     "prettier": "^3.8.3",
-    "turbo": "^2.9.12",
+    "turbo": "^2.9.14",
     "typescript": "5.9.3",
-    "vitest": "^4.1.5"
+    "vitest": "^4.1.6"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx,mjs,cjs}": [
