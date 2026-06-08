@@ -47,7 +47,7 @@ jobs:
         run: pnpm turbo run test --affected
 
       - name: Upload coverage reports
-        uses: codecov/codecov-action@v6
+        uses: codecov/codecov-action@v7
         if: always()
         with:
           directory: ./packages/utils/coverage
