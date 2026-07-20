@@ -252,7 +252,7 @@
     "postinstall": "playwright install chromium --with-deps || echo 'Playwright browser installation skipped'"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.31.0",
+    "@changesets/cli": "^2.31.1",
     "@commitlint/cli": "^20.5.3",
     "@commitlint/config-conventional": "^20.5.3",
     "@eslint/compat": "^2.1.0",
@@ -266,14 +266,14 @@
     "eslint-config-airbnb-extended": "^3.1.1",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.6",
-    "happy-dom": "^20.10.6",
+    "happy-dom": "^20.11.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.4.0",
     "npm-check-updates": "^19.6.6",
     "ntl": "^5.1.0",
     "playwright": "^1.61.1",
     "prettier": "^3.9.5",
-    "turbo": "^2.10.4",
+    "turbo": "^2.10.5",
     "typescript": "5.9.3",
     "vitest": "^4.1.10"
   },
