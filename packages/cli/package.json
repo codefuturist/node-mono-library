@@ -47,7 +47,7 @@
     "clean": "rm -rf dist coverage .turbo"
   },
   "dependencies": {
-    "@inquirer/prompts": "^8.5.2",
+    "@inquirer/prompts": "^8.6.0",
     "@repo/utils": "workspace:*",
     "@repo/validators": "workspace:*",
     "commander": "^14.0.3",
