@@ -12,10 +12,10 @@ catalog:
   tsup: "^8.5.1"
 
   # Testing
-  vitest: "^4.1.11"
-  "@vitest/coverage-v8": "^4.1.11"
+  vitest: "^4.1.12"
+  "@vitest/coverage-v8": "^4.1.12"
 
   # Linting & Formatting
   eslint: "^9.39.5"
-  prettier: "^3.9.9"
+  prettier: "^3.9.10"
   eslint-config-prettier: "^10.1.8"
