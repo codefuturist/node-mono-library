@@ -47,7 +47,7 @@
     "clean": "rm -rf dist coverage .turbo"
   },
   "dependencies": {
-    "@inquirer/prompts": "^8.7.4",
+    "@inquirer/prompts": "^8.7.5",
     "@repo/utils": "workspace:*",
     "@repo/validators": "workspace:*",
     "commander": "^14.0.3",
@@ -63,7 +63,7 @@
     "@repo/typescript-config": "workspace:*",
     "@repo/vitest-config": "workspace:*",
     "@types/node": "^25.9.9",
-    "@types/update-notifier": "^6.0.8",
+    "@types/update-notifier": "^6.0.9",
     "@vercel/ncc": "^0.45.0",
     "@vitest/coverage-v8": "catalog:",
     "@yao-pkg/pkg": "^6.24.0",
